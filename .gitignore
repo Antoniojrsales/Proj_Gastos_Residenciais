@@ -1,0 +1,35 @@
+# Ambiente virtual
+venv/
+ENV/
+env/
+
+# Arquivos de sistema
+.DS_Store
+Thumbs.db
+
+# Pycache
+__pycache__/
+*.py[cod]
+*.pyo
+
+# Arquivos de log ou temporários
+*.log
+*.tmp
+*.swp
+
+# Arquivos de configuração de IDE
+.vscode/
+.idea/
+
+# Dados sensíveis ou de autenticação
+*.json
+GBQ.json
+
+# Jupyter Notebooks checkpoints (caso use depois)
+.ipynb_checkpoints/
+
+# Streamlit cache
+.streamlit/
+
+# Chromedriver (evita conflito de versão em outros ambientes)
+chromedriver.exe
