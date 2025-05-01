@@ -10,8 +10,9 @@ Este projeto tem como objetivo analisar e visualizar os gastos residenciais util
 - Configuração do `.gitignore`
 - Primeiros arquivos adicionados ao controle de versão
 
-## ✅ Estruturação do projeto em pastas
+## 📁 Estrutura Inicial de Pastas
 
+```
 Proj_Gastos_Residenciais/
 ├── analysis/
 ├── datasets/
@@ -23,3 +24,4 @@ Proj_Gastos_Residenciais/
 ├── LICENSE
 ├── README.md
 └── requirements.txt
+```
