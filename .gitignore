@@ -33,3 +33,5 @@ GBQ.json
 
 # Chromedriver (evita conflito de versão em outros ambientes)
 chromedriver.exe
+
+.env
