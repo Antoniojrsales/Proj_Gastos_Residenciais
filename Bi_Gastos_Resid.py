@@ -13,13 +13,15 @@ try:
     load_dotenv()  # Carrega as variáveis do .env
     sheet_id = os.getenv('SHEET_ID')
     sheet_name = os.getenv('SHEET_NAME')
-    url = f'https://docs.google.com/spreadsheets/d/{sheet_id}/gviz/tq?tqx=out:csv&sheet={sheet_name}'
-    print('Conectado ao Google Sheets com sucesso.')
+    if sheet_id and sheet_name:
+        url = f'https://docs.google.com/spreadsheets/d/{sheet_id}/gviz/tq?tqx=out:csv&sheet={sheet_name}'
+        df_dados = pd.read_csv(url, index_col=0)
+        print('Conectado ao Google Sheets com sucesso.')
+    else:
+        st.error("As variáveis de ambiente SHEET_ID e SHEET_NAME não foram carregadas corretamente.")    
 except Exception as e:
-    print(f"Erro ao conectar com o Google Sheets: {e}")
+    st.error(f"Erro ao conectar com o Google Sheets: {e}")
 
-#Transformando os dados em um DataFrame
-df_dados = pd.read_csv(url, index_col=0)
 def clean_currency(value):
     if pd.isna(value):  # Se for NaN, retorna 0.0
         return 0.0
@@ -38,29 +40,56 @@ tipos_despesa = ['Despesa Moto', 'Despesa Casa', 'Transporte',
                  'Agua', 'Faculdade', 'Grafnet', 'Claro',
                  'Plano', 'Natacao', 'Nubank', 'Dentista']
 
+# Lista dos tipos de despesa diarias
+tipos_despesa_diarias = ['Despesa Moto', 'Despesa Casa', 'Transporte',
+                        'Despesa Combustivel', 'Despesa Remedio']
+
 #Filtrar o DataFrame para calcular onde o 'Tipo Receita/Despesa' está na lista de tipos Receita
-total_receitas = df_dados[df_dados['Tipo Receita/Despesa'] == 'Receita']['Valor'].sum()
+total_receitas = df_dados[df_dados['Categorias'] == 'Receita']['Valor'].sum()
 
 # Filtrar o DataFrame para incluir linhas onde o 'Tipo Receita/Despesa' está na lista de tipos de despesa
-df_despesas = df_dados[df_dados['Tipo Receita/Despesa'].isin(tipos_despesa)]
-
-#Filtrar o DataFrame para calcular onde o 'Tipo Receita/Despesa' está na lista de tipos Despesa
+df_despesas = df_dados[df_dados['Categorias'].isin(tipos_despesa)]
 total_despesas = df_despesas['Valor'].sum()
+
+# Filtrar o DataFrame para incluir linhas onde o 'Tipo Receita/Despesa' está na lista de tipos de despesa diarias
+df_despesas_diarias = df_dados[df_dados['Categorias'].isin(tipos_despesa_diarias)]
+
+# Filtrar o DataFrame para incluir linhas onde o 'Tipo Receita/Despesa' está na lista de tipos de despesa com moradia
+df_despesas_moradia = df_dados[df_dados['Categorias'] == 'Despesa Casa']
+total_despesas_moradia = df_despesas_moradia['Valor'].mean()
+
+# Filtrar o DataFrame para incluir linhas onde o 'Tipo Receita/Despesa' está na lista de tipos de despesa com combustivel
+df_despesas_combustivel = df_dados[df_dados['Categorias'] == 'Despesa Combustivel']
+total_despesas_combustivel = df_despesas_combustivel['Valor'].mean()
 
 # Calculando o Saldo Atual (Receita  - Despesas)
 saldo_atual = total_receitas - total_despesas
 
-st.sidebar.header('Dash Gastos Residenciais')
-
-options = st.sidebar.multiselect('Escolha a Coluna: ', df_dados.columns)
-if options:  # Verifica se alguma coluna foi selecionada
-    df_filtrado = df_dados[options]
-    st.write('Dataframe Filtrado:', df_filtrado)
-else:
-    st.write('Por favor, selecione ao menos uma coluna.')
+st.set_page_config(
+    page_title="Gastos Residenciais",
+    page_icon="💰",
+    layout="wide"
+)
 
 
-col1, col2, col3 = st.columns(3)
+st.sidebar.markdown("""
+    <div style="
+        padding: 5px;
+        text-align: center;">
+        <h2 style="font-size: 24px;">Dash Gastos Residenciais</h2>
+        <div id="chart-container" style="margin-top: 2px;"></div>
+    </div>
+""", unsafe_allow_html=True)
+
+with st.sidebar.expander("🔍 Visualizar colunas (debug)"):
+    options = st.multiselect('Escolha a Coluna:', df_dados.columns)
+    if options:
+        df_filtrado = df_dados[options]
+        st.write('Dataframe Filtrado:', df_filtrado)
+    else:
+        st.write('Por favor, selecione ao menos uma coluna.')
+
+col1, col2, col3 = st.columns([1, 1, 1])
 
 with col1:
 
@@ -122,3 +151,87 @@ with col3:
             <div style="{saldo_style}">R${total_despesas:.2f}</div>
         </div>
     """, unsafe_allow_html=True)
+
+col4, col5 = st.columns([1, 1])
+
+with col4:
+    st.markdown("""
+        <div style="
+            padding: 20px;
+            text-align: center;">
+            <h3>Distribuição de Despesas Diárias</h3>
+            <div id="chart-container" style="margin-top: 10px;"></div>
+        </div>
+    """, unsafe_allow_html=True)
+    fig = px.pie(df_despesas_diarias, 
+                    values='Valor', 
+                    names='Categorias',
+                    hole=0.4,
+                    title=" ")
+
+    # Melhorar o layout
+    fig.update_layout(
+    title_x=0.5,
+    width=600,    
+    height=350,
+    font=dict(size=14),
+    margin=dict(l=40, r=40, t=5, b=40))
+    st.plotly_chart(fig, use_container_width=True)
+
+with col5:
+    col_ed, col_ad = st.columns([1, 1])
+    
+    with col_ed:
+        st.markdown("""
+        <div style="
+            padding: 20px;">
+            <div id="chart-container" style="margin-top: 10px;"></div>
+        </div>
+        """, unsafe_allow_html=True)
+
+        card_style_gray = """
+        background: linear-gradient(to right, #555555, #696969);
+        color: white;
+        padding: 20px;
+        border-radius: 10px;
+        """
+
+        saldo_style = """
+            font-size: 2em;
+            font-weight: bold;
+        """
+
+        st.markdown(f"""
+            <div style="{card_style_gray}">
+                Media de gastos por semana Moradia
+                <div style="{saldo_style}">R${total_despesas_moradia:.2f}</div>
+            </div>
+        """, unsafe_allow_html=True)
+
+    with col_ad:
+        st.markdown("""
+        <div style="
+            padding: 20px;">
+            <div id="chart-container" style="margin-top: 10px;"></div>
+        </div>
+        """, unsafe_allow_html=True)
+        
+        card_style_gray = """
+        background: linear-gradient(to right, #555555, #696969);
+        color: white;
+        padding: 20px;
+        border-radius: 10px;
+        """
+
+        saldo_style = """
+            font-size: 2em;
+            font-weight: bold;
+        """
+
+        st.markdown(f"""
+            <div style="{card_style_gray}">
+                Media e gastos de Combustivel
+                <div style="{saldo_style}">R${total_despesas_combustivel:.2f}</div>
+            </div>
+        """, unsafe_allow_html=True)
+
