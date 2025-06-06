@@ -4,5 +4,3 @@ matplotlib
 plotly
 dotenv
 streamlit
-os
-re
