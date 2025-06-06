@@ -1,5 +1,8 @@
-gspread
 pandas
 numpy
 matplotlib
 plotly
+dotenv
+streamlit
+os
+re
