@@ -4,7 +4,6 @@ if 'df_Bi_Gastos_Resid' not in st.session_state:
     st.session_state['df_Bi_Gastos_Resid'] = carregar_dados()
 
 df_original = st.session_state['df_Bi_Gastos_Resid']
-df_original
 
 with st.sidebar.expander("🔍 Visualizar colunas"):
     options = st.multiselect('Escolha a Coluna:', df_original.columns)
