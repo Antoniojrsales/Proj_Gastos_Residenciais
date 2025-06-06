@@ -9,6 +9,17 @@ import os
 import streamlit as st
 import re
 
+# --- Proteção: Verifica se o usuário está logado ---
+if 'logged_in' not in st.session_state or not st.session_state['logged_in']:
+    st.warning("🔒 Você precisa estar logado para acessar esta página.")
+    st.stop()
+
+st.set_page_config(
+    page_title="Gastos Residenciais",
+    page_icon="💰",
+    layout="wide"
+)
+
 @st.cache_data(ttl=600)
 #Criando a conexao com a planilha do google sheets
 def load_data():

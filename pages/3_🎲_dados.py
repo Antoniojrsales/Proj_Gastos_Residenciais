@@ -1,5 +1,11 @@
 import streamlit as st
 
+st.set_page_config(
+    page_title="Gastos Residenciais",
+    page_icon="💰",
+    layout="wide"
+)
+
 if 'df_Bi_Gastos_Resid' not in st.session_state:
     st.session_state['df_Bi_Gastos_Resid'] = carregar_dados()
 

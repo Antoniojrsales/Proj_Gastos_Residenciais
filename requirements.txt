@@ -4,3 +4,4 @@ matplotlib
 plotly
 dotenv
 streamlit
+streamlit_extras

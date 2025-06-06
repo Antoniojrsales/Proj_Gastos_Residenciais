@@ -1,35 +1,51 @@
+from streamlit_extras.switch_page_button import switch_page
+from dotenv import load_dotenv
+import os
+import pandas as pd
 import streamlit as st
-from streamlit import dialog
+from auth_users import USERS
 
-st.set_page_config(
-    page_title="Gastos Residenciais",
-    page_icon="💰",
-    layout="wide"
-)
+st.set_page_config(page_title="Login", page_icon="🔐", layout="centered")
 
 st.sidebar.markdown('Desenvolvido por [AntonioJrSales](https://antoniojrsales.github.io/meu_portfolio/)')
 
 with st.form('sign_in'):
-    st.title('Sign In')
+    st.markdown("<h1 style='text-align: center;'>Sign In</h1>", unsafe_allow_html=True)
     st.caption('Please enter your username and password.')
     st.divider()
     username = st.text_input('Username')
-    password = st.text_input('Password',
-                             type='password')
+    password = st.text_input('Password', type='password')
     
-    submit_btn = st.form_submit_button(label="Submit",
-                                       type="primary",
-                                       use_container_width=True)
-    google_btn = st.form_submit_button(label="Continue with Google",
-                                       type="secondary",
-                                       use_container_width=True,
-                                       icon=':material/mail:')
+    submit_btn = st.form_submit_button(label="Submit", type="primary", use_container_width=True)
+    google_btn = st.form_submit_button(label="Continue with Google", type="secondary", use_container_width=True, icon=':material/mail:')
+
     col1, col2, col3, col4 = st.columns(4)
     with col3:
         remember_box = st.checkbox("Remember me")
     with col4:
-        forgot_pass = st.html('<p style=margin-top:8px; color:#FFAC41><a href="https://www.google.com.br/?hl=pt-BR">Forgot password?</a></p>')
+        st.markdown('<p style="margin-top:8px; color:#FFAC41"><a href="https://www.google.com.br/?hl=pt-BR">Forgot password?</a></p>', unsafe_allow_html=True)
 
-create_acc_btn = st.button(label="Create an Account",
-                           type="secondary",
-                           use_container_width=True)
+create_acc_btn = st.button(label="Create an Account", type="secondary", use_container_width=True)
+
+# Aqui entra a lógica de login e redirecionamento
+if submit_btn:
+    if username in USERS and password == USERS[username]:
+        try:
+            load_dotenv()
+            sheet_id = os.getenv('SHEET_ID')
+            sheet_name = os.getenv('SHEET_NAME')
+            if not sheet_id or not sheet_name:
+                raise ValueError("Variáveis de ambiente não definidas.")
+
+            url = f'https://docs.google.com/spreadsheets/d/{sheet_id}/gviz/tq?tqx=out:csv&sheet={sheet_name}'
+            df = pd.read_csv(url)
+            
+            st.session_state['logged_in'] = True
+            st.session_state['df_dados'] = df
+
+            st.success("Login bem-sucedido!")
+            switch_page("2_🏠_painel")  # redireciona
+        except Exception as e:
+            st.error(f"Erro ao carregar dados: {e}")
+    else:
+        st.error("Usuário ou senha incorretos.")
