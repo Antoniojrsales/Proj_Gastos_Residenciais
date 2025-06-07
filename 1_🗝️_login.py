@@ -3,7 +3,6 @@ from dotenv import load_dotenv
 import os
 import pandas as pd
 import streamlit as st
-from auth_users import USERS
 
 st.set_page_config(page_title="Login", page_icon="🔐", layout="centered")
 
@@ -44,6 +43,10 @@ def load_data():
         return pd.DataFrame()  # Retorna DataFrame vazio como fallback
 
 df_dados = load_data()
+
+# Acesse os usuários diretamente de st.secrets
+# st.secrets carrega o conteúdo de .streamlit/secrets.toml
+USERS = st.secrets["AUTH_USERS"]
 
 # Aqui entra a lógica de login e redirecionamento
 if submit_btn:
