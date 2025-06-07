@@ -26,22 +26,6 @@ with st.form('sign_in'):
 
 create_acc_btn = st.button(label="Create an Account", type="secondary", use_container_width=True)
 
-@st.cache_data(ttl=600)
-#Criando a conexao com a planilha do google sheets
-def load_data():
-    try:
-        load_dotenv()
-        sheet_id = os.getenv('SHEET_ID')
-        sheet_name = os.getenv('SHEET_NAME')
-        if not sheet_id or not sheet_name:
-            raise ValueError("Variáveis de ambiente não definidas.")
-        url = f'https://docs.google.com/spreadsheets/d/{sheet_id}/gviz/tq?tqx=out:csv&sheet={sheet_name}'
-        
-        return pd.read_csv(url)
-    except Exception as e:
-        st.error(f"Erro ao carregar dados: {e}")
-        return pd.DataFrame()  # Retorna DataFrame vazio como fallback
-
 #df_dados = load_data()
 
 # Acesse os usuários diretamente de st.secrets
@@ -55,16 +39,22 @@ except KeyError:
 # Aqui entra a lógica de login e redirecionamento
 if submit_btn:
     if username in USERS and password == USERS[username]:
-        df_dados = load_data()
-         # Verifica se o DataFrame foi carregado antes de armazenar na sessão
-        if not df_dados.empty:
+        try:
+            load_dotenv()
+            sheet_id = os.getenv('SHEET_ID')
+            sheet_name = os.getenv('SHEET_NAME')
+            if not sheet_id or not sheet_name:
+                raise ValueError("Variáveis de ambiente não definidas.")
+
+            url = f'https://docs.google.com/spreadsheets/d/{sheet_id}/gviz/tq?tqx=out:csv&sheet={sheet_name}'
+            df_dados = pd.read_csv(url)
+            
             st.session_state['logged_in'] = True
             st.session_state['df_Bi_Gastos_Resid'] = df_dados
 
             st.success("Login bem-sucedido!")
-            # st.write(df_dados) # Opcional: Removido para não mostrar dados na tela de login
             switch_page("2_🏠_painel")  # redireciona
-        else:
-            st.error("Erro ao carregar dados após o login. Tente novamente.")
+        except Exception as e:
+            st.error(f"Erro ao carregar dados: {e}")
     else:
         st.error("Usuário ou senha incorretos.")
