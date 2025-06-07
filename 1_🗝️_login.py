@@ -43,10 +43,12 @@ def load_data():
         st.error(f"Erro ao carregar dados: {e}")
         return pd.DataFrame()  # Retorna DataFrame vazio como fallback
 
+df_dados = load_data()
+
 # Aqui entra a lógica de login e redirecionamento
 if submit_btn:
     if username in USERS and password == USERS[username]:
-        df_dados = load_data()
+        #df_dados = load_data()
         st.session_state['logged_in'] = True
         st.session_state['df_Bi_Gastos_Resid'] = df_dados
 
