@@ -9,36 +9,23 @@ import os
 import streamlit as st
 import re
 
-# --- Proteção: Verifica se o usuário está logado ---
-if 'logged_in' not in st.session_state or not st.session_state['logged_in']:
-    st.warning("🔒 Você precisa estar logado para acessar esta página.")
-    st.stop()
-
 st.set_page_config(
     page_title="Gastos Residenciais",
     page_icon="💰",
     layout="wide"
 )
 
-@st.cache_data(ttl=600)
-#Criando a conexao com a planilha do google sheets
-def load_data():
-    try:
-        load_dotenv()
-        sheet_id = os.getenv('SHEET_ID')
-        sheet_name = os.getenv('SHEET_NAME')
-        if not sheet_id or not sheet_name:
-            raise ValueError("Variáveis de ambiente não definidas.")
-        url = f'https://docs.google.com/spreadsheets/d/{sheet_id}/gviz/tq?tqx=out:csv&sheet={sheet_name}'
-        
-        return pd.read_csv(url)
-    except Exception as e:
-        st.error(f"Erro ao carregar dados: {e}")
-        return pd.DataFrame()  # Retorna DataFrame vazio como fallback
-    
-df_dados = load_data()
+# --- Proteção: Verifica se o usuário está logado ---
+if 'logged_in' not in st.session_state or not st.session_state['logged_in']:
+    st.warning("🔒 Você precisa estar logado para acessar esta página.")
+    st.info("Por favor, volte para a [página de login](/)")
+    st.stop()
 
-st.session_state['df_Bi_Gastos_Resid'] = df_dados
+# Acessa o DataFrame salvo na sessão
+if 'df_Bi_Gastos_Resid' in st.session_state:
+    df_dados = st.session_state['df_Bi_Gastos_Resid']
+else:
+    st.warning("Dados não encontrados na sessão. Por favor, faça login novamente.")
 
 # Lista dos tipos de despesa
 tipos_despesa = ['Despesa Moto', 'Despesa Casa', 'Despesa Combustivel', 'Despesa Remedio', 

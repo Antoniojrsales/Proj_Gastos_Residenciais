@@ -6,16 +6,23 @@ st.set_page_config(
     layout="wide"
 )
 
-if 'df_Bi_Gastos_Resid' not in st.session_state:
-    st.session_state['df_Bi_Gastos_Resid'] = carregar_dados()
+# --- Proteção: Verifica se o usuário está logado ---
+if 'logged_in' not in st.session_state or not st.session_state['logged_in']:
+    st.warning("🔒 Você precisa estar logado para acessar esta página.")
+    st.info("Por favor, volte para a [página de login](/)")
+    st.stop()
 
-df_original = st.session_state['df_Bi_Gastos_Resid']
+# Acessa o DataFrame salvo na sessão
+if 'df_Bi_Gastos_Resid' in st.session_state:
+    df_dados = st.session_state['df_Bi_Gastos_Resid']
+else:
+    st.warning("Dados não encontrados na sessão. Por favor, faça login novamente.")
 
 with st.sidebar.expander("🔍 Visualizar colunas"):
-    options = st.multiselect('Escolha a Coluna:', df_original.columns)
+    options = st.multiselect('Escolha a Coluna:', df_dados.columns)
 
 if options:
-    df_filtrado = df_original[options]
+    df_filtrado = df_dados[options]
     st.write('Dataframe Filtrado:', df_filtrado.tail())
 else:
     st.write('Por favor, selecione ao menos uma coluna.')

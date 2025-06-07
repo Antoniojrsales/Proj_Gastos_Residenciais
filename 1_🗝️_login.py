@@ -27,25 +27,30 @@ with st.form('sign_in'):
 
 create_acc_btn = st.button(label="Create an Account", type="secondary", use_container_width=True)
 
+@st.cache_data(ttl=600)
+#Criando a conexao com a planilha do google sheets
+def load_data():
+    try:
+        load_dotenv()
+        sheet_id = os.getenv('SHEET_ID')
+        sheet_name = os.getenv('SHEET_NAME')
+        if not sheet_id or not sheet_name:
+            raise ValueError("Variáveis de ambiente não definidas.")
+        url = f'https://docs.google.com/spreadsheets/d/{sheet_id}/gviz/tq?tqx=out:csv&sheet={sheet_name}'
+        
+        return pd.read_csv(url)
+    except Exception as e:
+        st.error(f"Erro ao carregar dados: {e}")
+        return pd.DataFrame()  # Retorna DataFrame vazio como fallback
+
 # Aqui entra a lógica de login e redirecionamento
 if submit_btn:
     if username in USERS and password == USERS[username]:
-        try:
-            load_dotenv()
-            sheet_id = os.getenv('SHEET_ID')
-            sheet_name = os.getenv('SHEET_NAME')
-            if not sheet_id or not sheet_name:
-                raise ValueError("Variáveis de ambiente não definidas.")
+        df_dados = load_data()
+        st.session_state['logged_in'] = True
+        st.session_state['df_Bi_Gastos_Resid'] = df_dados
 
-            url = f'https://docs.google.com/spreadsheets/d/{sheet_id}/gviz/tq?tqx=out:csv&sheet={sheet_name}'
-            df = pd.read_csv(url)
-            
-            st.session_state['logged_in'] = True
-            st.session_state['df_dados'] = df
-
-            st.success("Login bem-sucedido!")
-            switch_page("2_🏠_painel")  # redireciona
-        except Exception as e:
-            st.error(f"Erro ao carregar dados: {e}")
+        st.success("Login bem-sucedido!")
+        switch_page("2_🏠_painel")  # redireciona
     else:
         st.error("Usuário ou senha incorretos.")
