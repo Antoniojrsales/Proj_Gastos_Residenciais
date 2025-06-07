@@ -42,20 +42,29 @@ def load_data():
         st.error(f"Erro ao carregar dados: {e}")
         return pd.DataFrame()  # Retorna DataFrame vazio como fallback
 
-df_dados = load_data()
+#df_dados = load_data()
 
 # Acesse os usuários diretamente de st.secrets
 # st.secrets carrega o conteúdo de .streamlit/secrets.toml
-USERS = st.secrets["AUTH_USERS"]
+try:
+    USERS = st.secrets["AUTH_USERS"]
+except KeyError:
+    st.error("Erro: A seção [AUTH_USERS] não foi encontrada em .streamlit/secrets.toml.")
+    st.stop() # Interrompe a execução se os segredos não forem carregados
 
 # Aqui entra a lógica de login e redirecionamento
 if submit_btn:
     if username in USERS and password == USERS[username]:
-        #df_dados = load_data()
-        st.session_state['logged_in'] = True
-        st.session_state['df_Bi_Gastos_Resid'] = df_dados
+        df_dados = load_data()
+         # Verifica se o DataFrame foi carregado antes de armazenar na sessão
+        if not df_dados.empty:
+            st.session_state['logged_in'] = True
+            st.session_state['df_Bi_Gastos_Resid'] = df_dados
 
-        st.success("Login bem-sucedido!")
-        switch_page("2_🏠_painel")  # redireciona
+            st.success("Login bem-sucedido!")
+            # st.write(df_dados) # Opcional: Removido para não mostrar dados na tela de login
+            switch_page("2_🏠_painel")  # redireciona
+        else:
+            st.error("Erro ao carregar dados após o login. Tente novamente.")
     else:
         st.error("Usuário ou senha incorretos.")
