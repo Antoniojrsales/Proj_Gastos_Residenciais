@@ -58,3 +58,5 @@ if submit_btn:
             st.error(f"Erro ao carregar dados: {e}")
     else:
         st.error("Usuário ou senha incorretos.")
+
+st.write("Usuários disponíveis para teste:", USERS)
