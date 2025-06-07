@@ -12,8 +12,8 @@ with st.form('sign_in'):
     st.markdown("<h1 style='text-align: center;'>Sign In</h1>", unsafe_allow_html=True)
     st.caption('Please enter your username and password.')
     st.divider()
-    username = st.text_input('Username')
-    password = st.text_input('Password', type='password')
+    username = st.text_input('Username').strip()
+    password = st.text_input('Password', type='password').strip()
     
     submit_btn = st.form_submit_button(label="Submit", type="primary", use_container_width=True)
     google_btn = st.form_submit_button(label="Continue with Google", type="secondary", use_container_width=True, icon=':material/mail:')
@@ -25,8 +25,6 @@ with st.form('sign_in'):
         st.markdown('<p style="margin-top:8px; color:#FFAC41"><a href="https://www.google.com.br/?hl=pt-BR">Forgot password?</a></p>', unsafe_allow_html=True)
 
 create_acc_btn = st.button(label="Create an Account", type="secondary", use_container_width=True)
-
-#df_dados = load_data()
 
 # Acesse os usuários diretamente de st.secrets
 # st.secrets carrega o conteúdo de .streamlit/secrets.toml
@@ -41,8 +39,8 @@ if submit_btn:
     if username in USERS and password == USERS[username]:
         try:
             load_dotenv()
-            sheet_id = os.getenv('SHEET_ID')
-            sheet_name = os.getenv('SHEET_NAME')
+            sheet_id = st.secrets["SHEET"]["SHEET_ID"]
+            sheet_name = st.secrets["SHEET"]["SHEET_NAME"]
             if not sheet_id or not sheet_name:
                 raise ValueError("Variáveis de ambiente não definidas.")
 
@@ -58,5 +56,3 @@ if submit_btn:
             st.error(f"Erro ao carregar dados: {e}")
     else:
         st.error("Usuário ou senha incorretos.")
-
-st.write("Usuários disponíveis para teste:", USERS)
