@@ -2,6 +2,5 @@ pandas
 numpy
 matplotlib
 plotly
-dotenv
 streamlit
 streamlit_extras

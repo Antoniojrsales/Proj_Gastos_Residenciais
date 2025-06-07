@@ -4,8 +4,6 @@ import numpy as np
 import matplotlib.pyplot as plt
 import plotly.express as px
 import plotly.graph_objects as go
-from dotenv import load_dotenv
-import os
 import streamlit as st
 import re
 
@@ -84,12 +82,10 @@ def remedy_expenses(df):
     # Retorna uma media por mes dos valores da categoria 'despesas remedios'
     return  calculate_total(df, 'Despesa Remedio')
 
-# Funcao que Filtra o total das despesas combustivel
 def fuel_expenses(df):
     # Retorna a media diaria dos valores da categoria 'despesas combustivel'
     return calculate_mean(df, 'Despesa Combustivel')
 
-# Funcao que Filtra o total das despesas conserto veiculo
 def repair_expenses(df):   
     # Retorna a media por mes dos valores da categoria 'Despesa Moto'
     return calculate_total(df, 'Despesa Moto')
@@ -259,53 +255,4 @@ with col5:
         
         render_card("Media de gastos com Veiculo", repair_expenses(df_dados), "#555555, #696969")
 
-c = st.container()
-with c:
-    st.markdown("""
-        <div style="
-            text-align: center;">
-            <h3 style=" font-size: 2em; 
-                        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;">
-                Distribuição de Despesas Diárias
-            </h3>
-            
-        </div>
-    """, unsafe_allow_html=True)
-    # Unir num DataFrame para facilitar o gráfico
-    df_grafico = pd.DataFrame({
-        'Receitas': receitas_por_mes,
-        'Despesas': despesas_por_mes
-    }).fillna(0)  # Preencher valores ausentes com zero
-
-    # Resetar o índice para usar no Plotly
-    df_grafico = df_grafico.reset_index()
-
-    df_grafico['Mes'] = pd.to_datetime(df_grafico['Mes'], format='%b/%Y')
-    df_grafico = df_grafico.sort_values('Mes')
-    df_grafico['Mes'] = df_grafico['Mes'].dt.strftime('%b/%Y')
-
-    fig = go.Figure(
-        data=[
-            go.Bar(x=df_grafico['Mes'], y=df_grafico['Receitas'], name='Receitas', marker_color='mediumseagreen'),
-            go.Bar(x=df_grafico['Mes'], y=df_grafico['Despesas'], name='Despesas', marker_color='indianred')
-        ]
-    )
-
-    fig.update_layout(
-        xaxis_title="Meses",
-        xaxis_title_font=dict(size=20),
-        yaxis_title="Valor (R$)",
-        yaxis_title_font=dict(size=20),
-        plot_bgcolor='white',
-        legend=dict(
-            x=1.02, y=1,
-            traceorder="normal",
-            font=dict(size=12),
-            bordercolor="Black",
-            borderwidth=1
-        )
-    )
-
-    fig.update_traces(texttemplate='%{y:.2f}', textposition='outside')
-
-    st.plotly_chart(fig, use_container_width=True)
+st.sidebar.markdown('Desenvolvido por [AntonioJrSales](https://antoniojrsales.github.io/meu_portfolio/)')

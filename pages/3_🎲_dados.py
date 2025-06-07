@@ -26,3 +26,5 @@ if options:
     st.write('Dataframe Filtrado:', df_filtrado.tail())
 else:
     st.write('Por favor, selecione ao menos uma coluna.')
+
+st.sidebar.markdown('Desenvolvido por [AntonioJrSales](https://antoniojrsales.github.io/meu_portfolio/)')

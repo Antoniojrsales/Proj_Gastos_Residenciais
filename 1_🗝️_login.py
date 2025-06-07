@@ -1,6 +1,4 @@
 from streamlit_extras.switch_page_button import switch_page
-from dotenv import load_dotenv
-import os
 import pandas as pd
 import streamlit as st
 
@@ -38,7 +36,6 @@ except KeyError:
 if submit_btn:
     if username in USERS and password == USERS[username]:
         try:
-            load_dotenv()
             sheet_id = st.secrets["SHEET"]["SHEET_ID"]
             sheet_name = st.secrets["SHEET"]["SHEET_NAME"]
             if not sheet_id or not sheet_name:
