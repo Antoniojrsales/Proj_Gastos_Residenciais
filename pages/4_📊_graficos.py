@@ -4,8 +4,8 @@ import plotly.graph_objects as go
 import pandas as pd
 
 st.set_page_config(
-    page_title="Gastos Residenciais",
-    page_icon="💰",
+    page_title="Graficos (Gastos Residencias)",
+    page_icon="📊",
     layout="wide"
 )
 

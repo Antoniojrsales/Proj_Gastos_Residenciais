@@ -2,7 +2,7 @@ from streamlit_extras.switch_page_button import switch_page
 import pandas as pd
 import streamlit as st
 
-st.set_page_config(page_title="Login", page_icon="🔐", layout="centered")
+st.set_page_config(page_title="Login (Gastos Residencias)", page_icon="🔐", layout="centered")
 
 st.sidebar.markdown('Desenvolvido por [AntonioJrSales](https://antoniojrsales.github.io/meu_portfolio/)')
 
