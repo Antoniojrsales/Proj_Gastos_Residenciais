@@ -13,6 +13,17 @@ st.set_page_config(
     layout="wide"
 )
 
+st.markdown("""
+<div style="
+    padding: 5px;
+    text-align: center;">
+    <h2 style=" font-size: 40px; 
+                font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif">
+                Gastos familia Sales_Ribeiro</h2>
+    <div id="chart-container" style="margin-bottom: 30px; color:'blue'"></div>
+</div>
+""", unsafe_allow_html=True)
+
 # --- Proteção: Verifica se o usuário está logado ---
 if 'logged_in' not in st.session_state or not st.session_state['logged_in']:
     st.warning("🔒 Você precisa estar logado para acessar esta página.")
@@ -133,15 +144,6 @@ df_dados['Mes'] = df_dados['Data'].dt.strftime('%b/%Y')  # Formato: Jan/2024
 # Separar receitas e despesas
 receitas_por_mes = df_dados[df_dados['Categorias'] == 'Receita'].groupby('Mes')['Valor'].sum()
 despesas_por_mes = df_dados[df_dados['Categorias'] != 'Receita'].groupby('Mes')['Valor'].sum()
-
-st.sidebar.markdown("""
-    <div style="
-        padding: 5px;
-        text-align: center;">
-        <h2 style="font-size: 24px;">Dash Gastos Residenciais</h2>
-        <div id="chart-container" style="margin-top: 2px;"></div>
-    </div>
-""", unsafe_allow_html=True)
 
 # Preparar lista de meses únicos (já formatados no estilo 'Jan/2025')
 meses_disponiveis = ['Saldo Atual'] + list(receitas_por_mes.index)
