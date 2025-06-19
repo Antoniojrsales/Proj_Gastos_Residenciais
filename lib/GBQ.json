@@ -1,0 +1,16 @@
+{
+  "type": "service_account",
+  "project_id": "cogent-bolt-438323-n9",
+  "private_key_id": "c510fe4697f667e9c6b5df1150df28841ddfa0e5",
+  "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEvAIBADANBgkqhkiG9w0BAQEFAASCBKYwggSiAgEAAoIBAQCaCaaiuoExE5dD\nk3JtgxtEXvZTGj6kNFFEMngxf8oTFdGICQW51kwGlbMZAhC1qpanllc0xpl35rT5\nRpkCzrTDBl/HuK5vz9qaAf+3XGv6h1I8qoZcuKytFVVOAcDK+75M0JAXquKCUn/W\nZilarGDFOwypdm6uYYRypLjVzKqxLPrFfqqe+CQ4SQXAa6WkjCRsUfzc0gObapNI\nRTIfzlr2N8EaQvuLKn0ecBnAklTy+o2Twr50wMLsES0alZk30HkSfx3U/4x6GhPu\n22zM6xaQZLnod3s8dmCKjMxq2uamxyHKd55QkVloliL2JHeleWfB9FVmJpNjVOUP\np1ShlFzRAgMBAAECggEAF5uuYrcLlouhHaXwiLY/rJfn+s6aloIU3nXkaU8OQnnl\nQOCDyc/9RkO/95o9w19fcv9IuE75NcuHJcQF2XdNdFfQFYUe6bDFQ+CrN4gTszRK\n4f9kqRCow7zxnmCzEqkd/m83VllGGUvZn0YjGmwxnKjd2kR2LDByozt5v1LR6mYe\n/0RyhQ5V+njqblog7czBdLhd6NWwteOa2DJFK9BlmUroVMmN52zJQvQ6jgV5baIs\njkk0bS9U51aykQbCyJOhULrH0U3e8ZoxhPrY25lO7otpjgquv7oPZO3QCN08Rpk6\nk/HB2SFiPPSpvp5bWcyP0VYchgSbgStTm1zvJ1dm/QKBgQDXiiEmKT8XTdbs0sMt\nHJhQwLyJ27OHE4Vk96R87LPI+2sHlXd/ksCpfFvWWw/EYQcLvFcJVsj0pwUhA4nv\nYs9oMGlWnrsn6QSgVnlnFy1vYdPM98ABcb3l4HBJHZ9FrXSkNLnAMeG5q+1PnGE2\n09vbkkecYylpVPEXIPCHWzoDLwKBgQC29AQOEYDMvGSzwU4Prekf0DRjHMHYIiSf\n93IgDCmDGD3E5vcZs5S0LibY6fca+GbxB5Jg7G1q4yUG46NvVKzPA/r4CNCVAWbL\nYpQ4BuMhg8kwmMNzlGDx+C5qCQowXjiOqlFxVe+anSj5MRDcpqErA+6rbqsOq/9Q\nmpFSof+f/wKBgH3/gmdTf005NKXWg0AQ0j2Kneyc4TLaR4WBeseIe4TG7IdPab7K\n5BNv3iPNscbjzYGfxOVxtSHHrSjib7Tf90z51+pJ+jBXeFvekTOhie7tqinMvpJZ\nkmAaNqmXRm8t+dyv8dIXltO6XIzIZs/tQz31IiWali+79v/FQrZtrtkDAoGAKNUv\nboBjkc5eX2w+Yut6w3nxp0lMzlNYf0d39kUgoryvVJoD/n2BK/G9A968Iw3b0+HP\nvsgl55xIsE/wMzHf29hUlDVLcGY+rhgTYqnO2bUTG0CNJuev93Ff0pSv7Hmq/9Rt\nlvEKKCT5dxyHWefqwrH++84YaY7jzfahhqLXbbsCgYAkaeO9vb3y4jg8UCL1VGiK\nvCpojQYOnUrkvFP+/3fk9FT7/15ZzLBqPiwVwWNdZ8r9Zpq9tbrOfu8VuoP4RB24\nErgMwxvzsOSWZ4iJaRnMroNYjljJjuss8d3S02hrjRjaIkLSJ1x6qQ8ImRl3PTWh\nwlniTBxN2JAznyfpraJwug==\n-----END PRIVATE KEY-----\n",
+  "client_email": "projeto-fut-stats-basegols@cogent-bolt-438323-n9.iam.gserviceaccount.com",
+  "client_id": "100068805981937838146",
+  "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+  "token_uri": "https://oauth2.googleapis.com/token",
+  "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+  "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/projeto-fut-stats-basegols%40cogent-bolt-438323-n9.iam.gserviceaccount.com",
+  "universe_domain": "googleapis.com"
+}
+
+
+https://docs.google.com/spreadsheets/d/1-lP_xqx8OWhNqXXH36y2Y0qxNhmYmWKD7v1ZSDg3xkI/edit?usp=sharing
