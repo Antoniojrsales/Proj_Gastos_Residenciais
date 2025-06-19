@@ -32,7 +32,8 @@ except KeyError:
     st.stop() # Interrompe a execução se os segredos não forem carregados
 
 try:
-    gc = gspread.service_account(filename='gastos.json')  # Seu arquivo JSON de credenciais
+    gspread_credentials = st.secrets["GSPREAD"]
+    gc = gspread.service_account_from_dict(gspread_credentials)
     sheet_id = st.secrets["SHEET"]["SHEET_ID"]  # 👉 Somente o ID da planilha
     sheet = gc.open_by_key(sheet_id)
     st.success("✅ Conectado ao Google Sheets com sucesso.")
