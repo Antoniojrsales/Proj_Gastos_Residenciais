@@ -35,6 +35,7 @@ try:
     gspread_credentials = st.secrets["GSPREAD"]
     gc = gspread.service_account_from_dict(gspread_credentials)
     sheet_id = st.secrets["SHEET"]["SHEET_ID"]  # 👉 Somente o ID da planilha
+    sheet_name = st.secrets["SHEET"]["SHEET_NAME"]
     sheet = gc.open_by_key(sheet_id)
     st.success("✅ Conectado ao Google Sheets com sucesso.")
 except Exception as e:
@@ -57,7 +58,7 @@ def load_worksheet_data(worksheet_name):
 if submit_btn:
     if username in USERS and password == USERS[username]:
         try:
-            df_dados = load_worksheet_data('orcamento')
+            df_dados = load_worksheet_data(sheet_name)
             
             st.session_state['logged_in'] = True
             st.session_state['df_Bi_Gastos_Resid'] = df_dados
