@@ -52,7 +52,7 @@ with aba1:
         st.write('Por favor, selecione ao menos uma coluna.')
 
     st.divider()
-    st.write(f"O dataset possui {df_dados.shape[0]} linhas e {df_dados.shape[1]} colunas.")
+    st.markdown(f"O dataset possui :blue[{df_dados.shape[0]}] linhas e :blue[{df_dados.shape[1]}] colunas.")
 
     st.divider()
 
