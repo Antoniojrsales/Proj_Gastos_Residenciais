@@ -5,3 +5,4 @@ plotly
 streamlit
 streamlit_extras
 gspread
+hashlib

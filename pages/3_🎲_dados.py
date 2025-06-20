@@ -3,7 +3,7 @@ import pandas as pd
 from datetime import datetime
 
 st.set_page_config(
-    page_title="Visualização dos Dados (Gastos Residencias)",
+    page_title="Visualização dos Dados | Gastos Residencias)",
     page_icon="🎲",
     layout="wide"
 )

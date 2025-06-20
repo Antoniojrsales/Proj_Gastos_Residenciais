@@ -8,7 +8,7 @@ import streamlit as st
 import re
 
 st.set_page_config(
-    page_title="Painel Geral (Gastos Residencias)",
+    page_title="Painel Geral | Gastos Residencias",
     page_icon="🏠",
     layout="wide"
 )
