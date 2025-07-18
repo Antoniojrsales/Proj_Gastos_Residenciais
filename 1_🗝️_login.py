@@ -12,6 +12,19 @@ st.set_page_config(page_title="Login | Gastos Residenciais",
 
 st.sidebar.markdown('Desenvolvido por [AntonioJrSales](https://antoniojrsales.github.io/meu_portfolio/)')
 
+# 🎨 Estilo CSS personalizado
+st.markdown("""
+    <style>
+    .stButton>button {
+        background-color: #4CAF50;
+        color: white;
+        font-weight: bold;
+        border-radius: 5px;
+        padding: 0.5em 1em;
+    }
+    </style>
+""", unsafe_allow_html=True)
+
 # -------------------------------
 # 🔐 Função para verificar senha
 # -------------------------------
@@ -64,8 +77,8 @@ with st.form("login_form"):
     st.markdown("<h1 style='text-align: center;'>🔐 Login</h1>", unsafe_allow_html=True)
     st.divider()
 
-    username = st.text_input("Usuário").strip()
-    password = st.text_input("Senha", type="password").strip()
+    username = st.text_input("👤 Usuário").strip()
+    password = st.text_input("🔒 Senha", type="password").strip()
 
     submit = st.form_submit_button("Entrar")
 
@@ -81,8 +94,8 @@ if submit:
             st.session_state['df_Bi_Gastos_Resid'] = df_dados
 
             st.success("✅ Login bem-sucedido!")
-            switch_page("2_🏠_painel")
+            #switch_page("2_🏠_painel")
         else:
-            st.warning("A planilha está vazia ou não foi encontrada.")
+            st.warning("⚠️ A planilha está vazia ou não foi encontrada.")
     else:
         st.error("❌ Usuário ou senha inválidos.")
