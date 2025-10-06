@@ -1,6 +1,6 @@
-# Projeto: Gastos Residenciais
+# 🏠 Projeto: Gastos Residenciais - Análise Financeira com Streamlit e Google Sheets
 
-Este projeto tem como objetivo analisar e visualizar os gastos residenciais utilizando dados estruturados em planilhas Google Sheets, com apoio de bibliotecas de análise e visualização de dados.
+Este projeto é uma ferramenta interativa desenvolvida em Streamlit para registrar, analisar e visualizar de forma eficiente as despesas e receitas residenciais. Ele utiliza o Google Sheets como backend de dados, demonstrando habilidades em integração de API e visualização de dados em tempo real.
 
 ## ✅ Etapas de Inicialização
 
@@ -14,14 +14,69 @@ Este projeto tem como objetivo analisar e visualizar os gastos residenciais util
 
 ```
 Proj_Gastos_Residenciais/
+├── .streamlit/
+│   └── secrets.toml  
 ├── analysis/
-├── datasets/
-├── img/
-├── lib/
-├── streamlit/
+│   └── exploration.ipynb  
+├── pages/
+│   ├── 1_🔑_login.py      
+│   ├── 2_🏠_painel.py      
+│   ├── 3_🎲_dados.py      
+│   └── 4_📊_graficos.py    
+├── utils/
+│   ├── data_processing.py 
+│   └── db_connector.py    
 ├── venv/
 ├── .gitignore
 ├── LICENSE
 ├── README.md
 └── requirements.txt
+```
+
+## ✨ Funcionalidades Principais
+
+| Recurso | Descrição | Habilidades Demonstradas |
+| :--- | :--- | :--- |
+| **Registro e Categorização** | Entrada rápida e validada de despesas e receitas, utilizando uma hierarquia de categorias (ex: Moradia > Luz, Água). | UX/UI, Validação de Dados, Estruturação de Dados. |
+| **Dashboard de Balanço** | Visualização de métricas-chave (Receita Total, Despesa Total e Saldo) em tempo real. | Streamlit Metrics, Análise Financeira. |
+| **Gráficos Interativos** | Análise da distribuição de gastos por categoria e tendências históricas mês a mês, utilizando Plotly para interatividade. | Plotly, Pandas, Visualização de Dados. |
+| **Modularidade** | Separação da lógica de dados (db_connector) e processamento (data_processing) do frontend Streamlit. | Engenharia de Software, Modularidade, Boas Práticas. |
+
+## 🛠 Tecnologias Utilizadas
+
+Este projeto foi construído utilizando as seguintes ferramentas e bibliotecas:
+
+* **Python 3.x**
+* **Streamlit:** Para a criação da interface web interativa.
+* **Pandas:** Para manipulação e processamento de dados.
+* **Plotly:** Para a geração de gráficos de alta qualidade e interativos.
+* **Google Sheets API:** Para persistência e leitura dos dados em nuvem.
+
+## ⚙️ Como Instalar e Rodar o Projeto
+Para executar a aplicação em sua máquina local, siga os passos abaixo:
+
+1. Clonagem e Configuração do Ambiente
+```
+# Clone o repositório
+git clone [SEU_LINK_DO_REPOSITORIO]
+cd Proj_Gastos_Residenciais
+
+# Crie e ative o ambiente virtual
+python -m venv venv
+source venv/bin/activate  # No Windows: venv\Scripts\activate
+
+# Instale as dependências
+pip install -r requirements.txt
+```
+
+2. Configuração do Google Sheets API
+Crie um arquivo de serviço JSON para acessar sua planilha do Google Sheets.
+
+Crie o arquivo .streamlit/secrets.toml e adicione suas credenciais e a key do arquivo JSON conforme a documentação do Streamlit.
+
+3. Execução da Aplicação
+Após configurar as credenciais, inicie o Streamlit:
+
+```
+streamlit run 1_login.py
 ```

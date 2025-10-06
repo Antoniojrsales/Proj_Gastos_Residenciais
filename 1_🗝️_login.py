@@ -7,7 +7,7 @@ import hashlib
 
 # ⚙️ Configuração da página
 st.set_page_config(page_title="Login | Gastos Residenciais", 
-                   page_icon="🔐", 
+                   page_icon="🔐.", 
                    layout="centered")
 
 st.sidebar.markdown('Desenvolvido por [AntonioJrSales](https://antoniojrsales.github.io/meu_portfolio/)')
