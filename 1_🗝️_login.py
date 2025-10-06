@@ -1,9 +1,8 @@
-# 📚 Bibliotecas
 import streamlit as st
-import pandas as pd
-import gspread
 from streamlit_extras.switch_page_button import switch_page
 import hashlib
+# Importa as funções de conexão
+from utils.db_connector import get_gspread_client, load_data, SHEET_NAME 
 
 # ⚙️ Configuração da página
 st.set_page_config(page_title="Login | Gastos Residenciais", 
@@ -26,52 +25,33 @@ st.markdown("""
 """, unsafe_allow_html=True)
 
 # -------------------------------
-# 🔐 Função para verificar senha
+# 🔐 Função para verificar senha (Pode ser movida para 'utils/auth.py' para ser mais limpo)
 # -------------------------------
 def check_password(input_password, stored_password):
     input_hash = hashlib.sha256(input_password.encode()).hexdigest()
     return input_hash == stored_password
 
 # -------------------------------
-# 🗂️ Carregar Credenciais
+# 🗂️ Carregar Credenciais de Usuário
 # -------------------------------
 try:
     USERS = st.secrets["AUTH_USERS"]
-    GSPREAD_CREDENTIALS = st.secrets["GSPREAD"]
-    SHEET_ID = st.secrets["SHEET"]["SHEET_ID"]
-    SHEET_NAME = st.secrets["SHEET"]["SHEET_NAME"]
-except Exception as e:
-    st.error(f"Erro nas configurações do secrets.toml: {e}")
+except KeyError:
+    st.error("Credenciais de usuário ausentes em secrets.toml.")
     st.stop()
 
+
 # -------------------------------
-# 🔗 Conectar ao Google Sheets
+# 🔗 Status de Conexão (Feedback Visual)
 # -------------------------------
-try:
-    gc = gspread.service_account_from_dict(GSPREAD_CREDENTIALS)
-    sheet = gc.open_by_key(SHEET_ID)
+sheet_client, connected = get_gspread_client()
+if connected:
     st.success("✅ Conectado ao Google Sheets.")
-except Exception as e:
-    st.error(f"❌ Erro ao conectar com o Google Sheets: {e}")
-    st.stop()
+else:
+    st.error("❌ Não foi possível conectar ao Google Sheets.")
 
 # -------------------------------
-# 📥 Função para carregar dados
-# -------------------------------
-@st.cache_data(ttl=600)
-def load_data(sheet_name):
-    try:
-        ws = sheet.worksheet(sheet_name)
-        data = ws.get_all_values()
-        cols = data.pop(0)
-        df = pd.DataFrame(data, columns=cols)
-        return df
-    except Exception as e:
-        st.error(f"Erro ao carregar a aba '{sheet_name}': {e}")
-        return pd.DataFrame()
-
-# -------------------------------
-# 🎨 Formulário de Login
+# 🎨 Formulário de Login (Mantém igual)
 # -------------------------------
 with st.form("login_form"):
     st.markdown("<h1 style='text-align: center;'>🔐 Login</h1>", unsafe_allow_html=True)
@@ -85,17 +65,22 @@ with st.form("login_form"):
 # -------------------------------
 # 🚀 Processamento do Login
 # -------------------------------
-if submit:
+if submit and connected: # Apenas processa se estiver conectado
     if username in USERS and check_password(password, USERS[username]):
-        df_dados = load_data(SHEET_NAME)
+        
+        # Chama a função modularizada
+        df_dados = load_data(SHEET_NAME, sheet_client) 
 
         if not df_dados.empty:
             st.session_state['logged_in'] = True
             st.session_state['df_Bi_Gastos_Resid'] = df_dados
-
-            st.success("✅ Login bem-sucedido!")
-            #switch_page("2_🏠_painel")
+            
+            st.success("✅ Login bem-sucedido! Redirecionando...")
+            # Use switch_page para ir para o painel
+            #switch_page("painel") 
         else:
-            st.warning("⚠️ A planilha está vazia ou não foi encontrada.")
+            st.warning("⚠️ A planilha está vazia.")
     else:
         st.error("❌ Usuário ou senha inválidos.")
+elif submit and not connected:
+    st.error("❌ Erro de conexão impede o login.")
