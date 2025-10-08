@@ -81,7 +81,7 @@ Após configurar as credenciais, inicie o Streamlit:
 streamlit run 1_login.py
 ```
 
-## 🔐 Detalhe Técnico: Sistema de Login
+## 🔐 Funcionalidades Principais (1_🗝️_login)
 O sistema de login foi implementado com foco em segurança e modularidade, utilizando as seguintes práticas:
 
 * **Autenticação Segura:** As credenciais de usuário são armazenadas no arquivo seguro .streamlit/secrets.toml e as senhas são criptografadas utilizando o algoritmo SHA256.
