@@ -3,7 +3,6 @@ import pandas as pd
 from datetime import datetime
 from utils.auth_check import check_login
 from utils.db_connector import get_gspread_client, append_row, load_data
-from utils.data_processing import CATEGORY_MAP
 
 st.set_page_config(
     page_title="Visualização dos Dados | Gastos Residencias)",
@@ -69,7 +68,7 @@ with aba1:
 
 with aba2:
     # Obtemos a lista de categorias únicas e ordenadas a partir do nosso mapa
-    tipos_categorias_disponiveis = sorted(CATEGORY_MAP.keys()) 
+    tipos_categorias_disponiveis = sorted(df_dados['Categorias'].unique()) 
 
     # Conexão gspread (se ainda não estiver definida no topo)
     sheet_client, connected = get_gspread_client() 
