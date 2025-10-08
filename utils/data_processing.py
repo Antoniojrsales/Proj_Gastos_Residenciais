@@ -43,7 +43,7 @@ def process_data(df: pd.DataFrame) -> pd.DataFrame:
         # Força o tipo numérico. 'coerce' transforma erros em NaN para tratamento posterior
         df['Valor'] = pd.to_numeric(df['Valor'], errors='coerce') 
         # Remove linhas com Valor inválido ou zero, para análise (opcional)
-        df.dropna(subset=['Valor'], inplace=True)
+        #df.dropna(subset=['Valor'], inplace=True)
     
     # B. Coluna 'Data': Conversão de String (DD/MM/AA) para DateTime
     if 'Data' in df.columns:
