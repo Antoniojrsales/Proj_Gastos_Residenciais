@@ -46,3 +46,25 @@ def load_data(sheet_name, _sheet_client):
     except Exception as e:
         st.error(f"Erro ao carregar a aba '{sheet_name}': {e}")
         return pd.DataFrame()
+    
+def append_row(new_row: list, _sheet_client): # Não esqueça do _ underscore no cliente!
+    """
+    Insere uma nova linha na aba principal da planilha.
+    """
+    if not _sheet_client:
+        return False
+
+    try:
+        ws = _sheet_client.worksheet(st.secrets["SHEET"]["SHEET_NAME"])
+        
+        # Insere a nova linha no final
+        ws.append_row(new_row, value_input_option='USER_ENTERED')
+        
+        # CRUCIAL: Limpa o cache para que load_data() traga o novo dado
+        st.cache_data.clear() 
+
+        return True
+
+    except Exception as e:
+        # st.error(f"❌ Erro ao adicionar dados na planilha: {e}") # (Opcional: use st.error aqui ou no front-end)
+        return False

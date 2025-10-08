@@ -3,15 +3,20 @@ from streamlit_extras.switch_page_button import switch_page
 import hashlib
 # Importa as funções de conexão
 from utils.db_connector import get_gspread_client, load_data, SHEET_NAME 
+from utils.data_processing import process_data
 
+# -------------------------------
 # ⚙️ Configuração da página
+# -------------------------------
 st.set_page_config(page_title="Login | Gastos Residenciais", 
                    page_icon="🔐.", 
                    layout="centered")
 
 st.sidebar.markdown('Desenvolvido por [AntonioJrSales](https://antoniojrsales.github.io/meu_portfolio/)')
 
+# -------------------------------
 # 🎨 Estilo CSS personalizado
+# -------------------------------
 st.markdown("""
     <style>
     .stButton>button {
@@ -69,9 +74,10 @@ if submit and connected: # Apenas processa se estiver conectado
     if username in USERS and check_password(password, USERS[username]):
         
         # Chama a função modularizada
-        df_dados = load_data(SHEET_NAME, sheet_client) 
+        df_bruto = load_data(SHEET_NAME, sheet_client) 
 
-        if not df_dados.empty:
+        if not df_bruto.empty:
+            df_dados = process_data(df_bruto)
             st.session_state['logged_in'] = True
             st.session_state['df_Bi_Gastos_Resid'] = df_dados
             

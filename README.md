@@ -80,3 +80,20 @@ Após configurar as credenciais, inicie o Streamlit:
 ```
 streamlit run 1_login.py
 ```
+
+## 🔐 Detalhe Técnico: Sistema de Login
+O sistema de login foi implementado com foco em segurança e modularidade, utilizando as seguintes práticas:
+
+* **Autenticação Segura:** As credenciais de usuário são armazenadas no arquivo seguro .streamlit/secrets.toml e as senhas são criptografadas utilizando o algoritmo SHA256.
+
+* **Gerenciamento de Estado:** Utilizamos st.session_state para rastrear o estado do usuário (logged_in), garantindo que a aplicação saiba se o acesso deve ser permitido.
+
+* **Proteção de Páginas:** Uma função de validação (utils/auth_check.py) verifica o estado de login no início de cada página, impedindo o acesso não autorizado ao dashboard e aos dados.
+
+## ✨ Funcionalidades Principais (3_🎲_dados)
+
+Recurso	Descrição |	Habilidades | Demonstradas
+| :--- | :--- | :--- |
+* **Registro de Gastos (CRUD):** | Formulário robusto para inserção de dados, com validações em tempo real e uso do CATEGORY_MAP para garantir a consistência das entradas. |	CRUD (Create), Validação de Dados, Python/Pandas.
+* **Arquitetura do Formulário:** | Utiliza o st.form com gerenciamento de estado (st.session_state) para limpar o formulário e gerenciar o cache (st.cache_data.clear()) de forma eficiente após a submissão. | Engenharia de Software, Gerenciamento de Cache, UX em Streamlit.
+* **Visualização Detalhada:** |	Exibe dados brutos em uma tabela interativa (st.dataframe) com filtros de colunas, formatação de moeda (R$) e opções de visualização (Todos, Head, Tail). |	Visualização de Dados, st.column_config, Pandas.
