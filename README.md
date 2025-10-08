@@ -94,6 +94,6 @@ O sistema de login foi implementado com foco em segurança e modularidade, utili
 
 Recurso	Descrição |	Habilidades | Demonstradas
 | :--- | :--- | :--- |
-|* **Registro de Gastos (CRUD):** | Formulário robusto para inserção de dados, com validações em tempo real e uso do CATEGORY_MAP para garantir a consistência das entradas. |	CRUD (Create), Validação de Dados, Python/Pandas.|
-|* **Arquitetura do Formulário:** | Utiliza o st.form com gerenciamento de estado (st.session_state) para limpar o formulário e gerenciar o cache (st.cache_data.clear()) de forma eficiente após a submissão. | Engenharia de Software, Gerenciamento de Cache, UX em Streamlit.|
-|* **Visualização Detalhada:** | Exibe dados brutos em uma tabela interativa (st.dataframe) com filtros de colunas, formatação de moeda (R$) e opções de visualização (Todos, Head, Tail). |	Visualização de Dados, st.column_config, Pandas.|
+| **Registro de Gastos (CRUD):** | Formulário robusto para inserção de dados, com validações em tempo real e uso do CATEGORY_MAP para garantir a consistência das entradas. |	CRUD (Create), Validação de Dados, Python/Pandas.|
+| **Arquitetura do Formulário:** | Utiliza o st.form com gerenciamento de estado (st.session_state) para limpar o formulário e gerenciar o cache (st.cache_data.clear()) de forma eficiente após a submissão. | Engenharia de Software, Gerenciamento de Cache, UX em Streamlit.|
+| **Visualização Detalhada:** | Exibe dados brutos em uma tabela interativa (st.dataframe) com filtros de colunas, formatação de moeda (R$) e opções de visualização (Todos, Head, Tail). | Visualização de Dados, st.column_config, Pandas.|
