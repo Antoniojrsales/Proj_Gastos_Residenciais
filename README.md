@@ -97,3 +97,12 @@ Recurso	Descrição |	Habilidades | Demonstradas
 | **Registro de Gastos (CRUD):** | Formulário robusto para inserção de dados, com validações em tempo real e uso do CATEGORY_MAP para garantir a consistência das entradas. |	CRUD (Create), Validação de Dados, Python/Pandas.|
 | **Arquitetura do Formulário:** | Utiliza o st.form com gerenciamento de estado (st.session_state) para limpar o formulário e gerenciar o cache (st.cache_data.clear()) de forma eficiente após a submissão. | Engenharia de Software, Gerenciamento de Cache, UX em Streamlit.|
 | **Visualização Detalhada:** | Exibe dados brutos em uma tabela interativa (st.dataframe) com filtros de colunas, formatação de moeda (R$) e opções de visualização (Todos, Head, Tail). | Visualização de Dados, st.column_config, Pandas.|
+
+## ✨ Funcionalidades Principais (2_🏠_painel)
+
+Recurso	| Descrição	| Habilidades Demonstradas
+| :--- | :--- | :--- |
+| **Arquitetura Modular (DRY):** | Todos os cálculos (Receita, Despesa, Saldos e Médias) são isolados em funções no utils/data_processing.py, garantindo que o Painel seja apenas uma camada de apresentação. | Modularidade, Princípio DRY, Engenharia de Software.|
+| **Filtro Temporal Dinâmico:** | O Painel permite alternar entre o Balanço Total e o Balanço Mensal (mês a mês), utilizando funções modularizadas (calculate_monthly_balance) para filtrar e recalcular as métricas em tempo real. | Manipulação de Séries Temporais, UX/UI, Gerenciamento de Filtros.|
+| **Gráfico de Distribuição:** | Apresenta a distribuição percentual dos gastos agrupados por 'Categoria Principal' (recurso criado via Feature Engineering), fornecendo uma visão de alto nível do orçamento. | Visualização de Dados (Plotly), Análise de Alto Nível.|
+| **Métricas Detalhadas:** | Exibe cartões de média de gastos por Categoria Detalhada (ex: Despesa Casa, Despesa Moto), utilizando uma função específica (calculate_average_by_detailed_category) para precisão analítica. | Flexibilidade Analítica, Manipulação Avançada de Pandas.|
