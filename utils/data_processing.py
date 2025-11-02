@@ -163,3 +163,41 @@ def render_card(title, value, gradient):
             <div style="{saldo_style}">{valor_formatado}</div>
         </div>
     """, unsafe_allow_html=True)
+
+def aggregate_monthly_data(df: pd.DataFrame) -> pd.DataFrame:
+    """
+    Agrega Receitas e Despesas por Mes_Ano, para análise de tendência.
+    Retorna um DataFrame com colunas Mes_Ano, Receita, Despesa.
+    """
+    if df.empty or 'Mes/Ano' not in df.columns or 'Tipo' not in df.columns:
+        return pd.DataFrame()
+
+    # Agrupa por Mês/Ano e Tipo, somando o Valor. Preenche NaN com 0.
+    df_grouped = df.groupby(['Mes/Ano', 'Tipo'])['Valor'].sum().unstack(fill_value=0)
+    
+    # Se 'Receita' ou 'Despesa' não existirem (após o unstack), cria como 0
+    if 'Receita' not in df_grouped.columns:
+        df_grouped['Receita'] = 0
+    if 'Despesa' not in df_grouped.columns:
+        df_grouped['Despesa'] = 0
+
+    # Adiciona a coluna Saldo para visualização
+    df_grouped['Saldo'] = df_grouped['Receita'] - df_grouped['Despesa']
+    
+    # Limpa o nome do índice de coluna e reseta o índice (Mes_Ano vira coluna)
+    df_grouped.columns.name = None     
+    df_grouped = df_grouped.reset_index()
+
+    # 🧩 Converte 'Mes/Ano' para datetime para ordenar corretamente
+    try:
+        df_grouped['DataOrdenada'] = pd.to_datetime(df_grouped['Mes/Ano'], format='%b/%Y')  # Ex: Jan/2025
+    except:
+        df_grouped['DataOrdenada'] = pd.to_datetime(df_grouped['Mes/Ano'], errors='coerce')
+
+    # Ordena pelo campo convertido
+    df_grouped = df_grouped.sort_values('DataOrdenada')
+
+    # Remove a coluna auxiliar
+    df_grouped = df_grouped.drop(columns=['DataOrdenada'])
+
+    return df_grouped

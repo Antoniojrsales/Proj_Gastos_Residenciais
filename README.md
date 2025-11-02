@@ -90,14 +90,6 @@ O sistema de login foi implementado com foco em segurança e modularidade, utili
 
 * **Proteção de Páginas:** Uma função de validação (utils/auth_check.py) verifica o estado de login no início de cada página, impedindo o acesso não autorizado ao dashboard e aos dados.
 
-## ✨ Funcionalidades Principais (3_🎲_dados)
-
-Recurso	Descrição |	Habilidades | Demonstradas
-| :--- | :--- | :--- |
-| **Registro de Gastos (CRUD):** | Formulário robusto para inserção de dados, com validações em tempo real e uso do CATEGORY_MAP para garantir a consistência das entradas. |	CRUD (Create), Validação de Dados, Python/Pandas.|
-| **Arquitetura do Formulário:** | Utiliza o st.form com gerenciamento de estado (st.session_state) para limpar o formulário e gerenciar o cache (st.cache_data.clear()) de forma eficiente após a submissão. | Engenharia de Software, Gerenciamento de Cache, UX em Streamlit.|
-| **Visualização Detalhada:** | Exibe dados brutos em uma tabela interativa (st.dataframe) com filtros de colunas, formatação de moeda (R$) e opções de visualização (Todos, Head, Tail). | Visualização de Dados, st.column_config, Pandas.|
-
 ## ✨ Funcionalidades Principais (2_🏠_painel)
 
 Recurso	| Descrição	| Habilidades Demonstradas
@@ -106,3 +98,19 @@ Recurso	| Descrição	| Habilidades Demonstradas
 | **Filtro Temporal Dinâmico:** | O Painel permite alternar entre o Balanço Total e o Balanço Mensal (mês a mês), utilizando funções modularizadas (calculate_monthly_balance) para filtrar e recalcular as métricas em tempo real. | Manipulação de Séries Temporais, UX/UI, Gerenciamento de Filtros.|
 | **Gráfico de Distribuição:** | Apresenta a distribuição percentual dos gastos agrupados por 'Categoria Principal' (recurso criado via Feature Engineering), fornecendo uma visão de alto nível do orçamento. | Visualização de Dados (Plotly), Análise de Alto Nível.|
 | **Métricas Detalhadas:** | Exibe cartões de média de gastos por Categoria Detalhada (ex: Despesa Casa, Despesa Moto), utilizando uma função específica (calculate_average_by_detailed_category) para precisão analítica. | Flexibilidade Analítica, Manipulação Avançada de Pandas.|
+
+## ✨ Funcionalidades Principais (3_🎲_dados)
+
+Recurso	Descrição |	Habilidades | Demonstradas
+| :--- | :--- | :--- |
+| **Registro de Gastos (CRUD):** | Formulário robusto para inserção de dados, com validações em tempo real e uso do CATEGORY_MAP para garantir a consistência das entradas. |	CRUD (Create), Validação de Dados, Python/Pandas.|
+| **Arquitetura do Formulário:** | Utiliza o st.form com gerenciamento de estado (st.session_state) para limpar o formulário e gerenciar o cache (st.cache_data.clear()) de forma eficiente após a submissão. | Engenharia de Software, Gerenciamento de Cache, UX em Streamlit.|
+| **Visualização Detalhada:** | Exibe dados brutos em uma tabela interativa (st.dataframe) com filtros de colunas, formatação de moeda (R$) e opções de visualização (Todos, Head, Tail). | Visualização de Dados, st.column_config, Pandas.|
+
+## ✨ Funcionalidades Principais (4_📊_Gráficos)
+
+Recurso | Descrição | Habilidades Demonstradas
+| :--- | :--- | :--- |
+| **Gráfico de Tendência Histórica:** | Gráfico de linha interativo que traça a evolução mensal da Receita e da Despesa. O eixo temporal é ordenado corretamente usando manipulação de strings Pandas (%Y-%m). | Série Temporal, Visualização de Tendência, Manipulação de Eixo Cronológico.|
+| **Análise de Balanço Mensal:** | Gráfico de barras que exibe o Saldo (Receita - Despesa) para cada mês. As barras são coloridas dinamicamente (Verde para Saldo Positivo, Vermelho para Negativo). | Plotly Avançado, Mapeamento de Cores Dinâmicas, Análise de Fluxo de Caixa.|
+| **Agregação Modular:** | O DataFrame é pré-agregado por mês/tipo de forma eficiente por uma função única (aggregate_monthly_data), garantindo que o Plotly receba dados prontos para visualização. | Engenharia de Dados (Aggregation), Desempenho.|
