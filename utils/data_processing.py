@@ -102,11 +102,11 @@ def calculate_balance(df: pd.DataFrame):
 
 def get_available_months(df: pd.DataFrame) -> List[str]:
     """Gera uma lista de meses únicos (formatados) presentes no DataFrame."""
-    if df.empty or 'Mes_Ano' not in df.columns:
+    if df.empty or 'Mes/Ano' not in df.columns:
         return ['Saldo Atual']
     
     # A lista já está em string (graças ao process_data), apenas pega os únicos
-    meses_disponiveis = df['Mes_Ano'].unique().tolist()
+    meses_disponiveis = df['Mes/Ano'].unique().tolist()
     
     # Adiciona o filtro total e inverte a ordem (do mais recente para o mais antigo)
     return ['Saldo Atual'] + sorted(meses_disponiveis, reverse=True)
@@ -118,7 +118,7 @@ def calculate_monthly_balance(df: pd.DataFrame, target_month: str) -> Tuple[floa
         return calculate_balance(df) # Retorna o total se for Saldo Atual
         
     # Filtra o DataFrame pelo mês escolhido
-    df_mes = df[df['Mes_Ano'] == target_month]
+    df_mes = df[df['Mes/Ano'] == target_month]
     
     # Reutiliza a função principal de balanço, agora no DF filtrado
     return calculate_balance(df_mes)

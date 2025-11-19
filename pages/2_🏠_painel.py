@@ -1,4 +1,4 @@
-#Bibliotecas
+#-- Bibliotecas --#
 import pandas as pd
 import plotly.express as px
 import streamlit as st
@@ -6,7 +6,7 @@ from utils.data_processing import render_card, calculate_balance, get_available_
 from utils.auth_check import check_login
 
 # -------------------------------
-# 1. CONFIGURAÇÃO E SEGURANÇA
+# ⚙️ Configuração da página
 # -------------------------------
 st.set_page_config(
     page_title="Painel Geral | Gastos Residencias",
@@ -14,6 +14,9 @@ st.set_page_config(
     layout="wide"
 )
 
+# -------------------------------
+# 🎨 Estilo CSS personalizado
+# -------------------------------
 st.markdown("""
 <div style="
     padding: 5px;
@@ -27,14 +30,16 @@ st.markdown("""
 
 check_login()
 
-# Acessa o DataFrame salvo na sessão
+# -------------------------------
+# 🗂️ Acessa o DataFrame salvo na sessão
+# -------------------------------
 if 'df_Bi_Gastos_Resid' in st.session_state:
     df_dados = st.session_state['df_Bi_Gastos_Resid']
 else:
     st.warning("Dados não encontrados na sessão. Por favor, faça login novamente.")
 
 # -------------------------------
-# 2. LÓGICA DO FILTRO TEMPORAL
+# ⚙️ LÓGICA DO FILTRO TEMPORAL E PAINEL DE VISUALIZAÇÃO (Receita, Despesas, Saldo)
 # -------------------------------
 # 1. Obtém a lista de meses (modularizada)
 meses_disponiveis = get_available_months(df_dados)
@@ -43,7 +48,7 @@ mes_escolhido = st.sidebar.selectbox('Escolha o mês: ', meses_disponiveis, inde
 # Calcula o balanço (Total ou Mensal)
 receita, despesa, saldo = calculate_monthly_balance(df_dados, mes_escolhido)
 col1, col2, col3 = st.columns([1, 1, 1])
-if mes_escolhido == 'Saldo Atual':
+if mes_escolhido:
     with col1:
         render_card(f"Saldo de {mes_escolhido}" if mes_escolhido != 'Saldo Atual' else "Saldo Atual", 
                 saldo, "#FF8C00, #E91E63")
@@ -55,7 +60,7 @@ if mes_escolhido == 'Saldo Atual':
                 despesa, "#A9A9A9, #696969")
 
 # -------------------------------
-# 4. GRÁFICO DE PIZZA (Distribuição de Despesas)
+# 📈 GRÁFICO DE PIZZA (Distribuição de Despesas)
 # -------------------------------
 col4, col5 = st.columns([1, 1])
 with col4:
@@ -91,6 +96,9 @@ with col4:
                 margin=dict(l=40, r=40, t=5, b=40))
     st.plotly_chart(fig, use_container_width=True)
 
+# -------------------------------
+# ⚙️ LÓGICA DO FILTRO E PAINEL DE VISUALIZAÇÃO (despesas)
+# -------------------------------
 with col5:
     st.markdown("""
         <div style="
