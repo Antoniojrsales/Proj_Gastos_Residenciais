@@ -14,6 +14,8 @@ st.set_page_config(
     layout="wide"
 )
 
+st.sidebar.markdown('Desenvolvido por [AntonioJrSales](https://antoniojrsales.github.io/meu_portfolio/)')
+
 # -------------------------------
 # 🎨 Estilo CSS personalizado
 # -------------------------------
@@ -23,7 +25,7 @@ st.markdown("""
     text-align: center;">
     <h2 style=" font-size: 40px; 
                 font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif">
-                Gastos familia Sales_Ribeiro</h2>
+                Painel Geral | Gastos Residencias</h2>
     <div id="chart-container" style="margin-bottom: 30px; color:'blue'"></div>
 </div>
 """, unsafe_allow_html=True)
@@ -50,14 +52,11 @@ receita, despesa, saldo = calculate_monthly_balance(df_dados, mes_escolhido)
 col1, col2, col3 = st.columns([1, 1, 1])
 if mes_escolhido:
     with col1:
-        render_card(f"Saldo de {mes_escolhido}" if mes_escolhido != 'Saldo Atual' else "Saldo Atual", 
-                saldo, "#FF8C00, #E91E63")
+        render_card(f"Saldo de {mes_escolhido}" if mes_escolhido != 'Saldo Atual' else "Saldo Atual", saldo, "#FF8C00, #E91E63")
     with col2:
-        render_card(f"Receita de {mes_escolhido}" if mes_escolhido != 'Saldo Atual' else "Receita", 
-                receita, "#A9A9A9, #696969")
+        render_card(f"Receita de {mes_escolhido}" if mes_escolhido != 'Saldo Atual' else "Receita", receita, "#A9A9A9, #696969")
     with col3:
-        render_card(f"Despesas de {mes_escolhido}" if mes_escolhido != 'Saldo Atual' else "Despesas", 
-                despesa, "#A9A9A9, #696969")
+        render_card(f"Despesas de {mes_escolhido}" if mes_escolhido != 'Saldo Atual' else "Despesas", despesa, "#A9A9A9, #696969")
 
 # -------------------------------
 # 📈 GRÁFICO DE PIZZA (Distribuição de Despesas)
@@ -160,4 +159,3 @@ with col5:
         
         render_card("Média Gasto Moto", media_moto, "#555555, #696969")
 
-st.sidebar.markdown('Desenvolvido por [AntonioJrSales](https://antoniojrsales.github.io/meu_portfolio/)')

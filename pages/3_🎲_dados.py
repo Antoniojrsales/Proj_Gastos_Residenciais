@@ -10,6 +10,19 @@ st.set_page_config(
     layout="wide"
 )
 
+st.sidebar.markdown('Desenvolvido por [AntonioJrSales](https://antoniojrsales.github.io/meu_portfolio/)')
+
+st.markdown("""
+<div style="
+    padding: 5px;
+    text-align: center;">
+    <h2 style=" font-size: 40px; 
+                font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif">
+                Visualização dos Dados | Gastos Residencias</h2>
+    <div id="chart-container" style="margin-bottom: 30px; color:'blue'"></div>
+</div>
+""", unsafe_allow_html=True)
+
 check_login()
 
 # --- INICIALIZAÇÃO DO ESTADO DE SESSÃO ---
@@ -20,17 +33,6 @@ df_dados = st.session_state['df_Bi_Gastos_Resid']
 if df_dados.empty:    
     st.warning("Dados não encontrados na sessão. Por favor, faça login novamente.")
     st.stop()
-
-st.markdown("""
-<div style="
-    padding: 5px;
-    text-align: center;">
-    <h2 style=" font-size: 40px; 
-                font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif">
-                Gastos familia Sales_Ribeiro</h2>
-    <div id="chart-container" style="margin-bottom: 30px; color:'blue'"></div>
-</div>
-""", unsafe_allow_html=True)
 
 aba1, aba2 = st.tabs(['Dados Brutos', 'Inserindo Dados na base']) 
 
@@ -118,5 +120,3 @@ with aba2:
 
             else:
                 st.error("❌ Falha ao salvar no Google Sheets. Verifique o console.")
-
-st.sidebar.markdown('Desenvolvido por [AntonioJrSales](https://antoniojrsales.github.io/meu_portfolio/)')

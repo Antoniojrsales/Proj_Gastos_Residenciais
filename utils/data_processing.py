@@ -19,19 +19,20 @@ CATEGORY_MAP = {
     'Grafnet': ('Moradia/Contas', 'Despesa'),
     'Claro': ('Moradia/Contas', 'Despesa'),
     'Plano': ('Moradia/Contas', 'Despesa'),
+    'Faculdade': ('Moradia/Contas', 'Despesa'),
+    'Nubank': ('Moradia/Contas', 'Despesa'),
     
     # Transporte / Veículo
     'Despesa Moto': ('Transporte', 'Despesa'),
     'Despesa Combustivel': ('Transporte', 'Despesa'),
     
     # Saúde
-    'Despesa Remedio': ('Saúde', 'Despesa'),
     'Dentista': ('Saúde', 'Despesa'),
+    'Despesa Remedio': ('Saúde', 'Despesa'),
+    'Natacao': ('Saúde', 'Despesa'),
     
     # Lazer / Educação / Outros
-    'Faculdade': ('Lazer/Educação', 'Despesa'),
     'Outros Laser/Festa/Reforma': ('Lazer/Outros', 'Despesa'),
-    'Nubank': ('Financeiro/Dívidas', 'Despesa'), # Exemplo
 }
 
 # ====================================================================

@@ -67,7 +67,25 @@ with st.form("login_form"):
     password = st.text_input("🔒 Senha", type="password").strip()
 
     submit = st.form_submit_button("Entrar")
-
+    st.markdown("""
+        <style>
+        /* Alvo específico para o botão de submit dentro do form */
+        div.stFormSubmitButton > button {
+            background-color: #075eb2 !important;
+            color: white !important;
+            border-radius: 5px;
+            border: none;
+            height: auto;
+            padding: 0.5em 1em;
+        }
+        
+        /* Efeito de hover para não ficar estático */
+        div.stFormSubmitButton > button:hover {
+            background-color: #004d9f !important;
+            color: white !important;
+        }
+        </style>
+        """, unsafe_allow_html=True)
 # -------------------------------
 # 🚀 Processamento do Login
 # -------------------------------
