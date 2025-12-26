@@ -107,7 +107,7 @@ Recurso	Descrição |	Habilidades | Demonstradas
 | **Arquitetura do Formulário:** | Utiliza o st.form com gerenciamento de estado (st.session_state) para limpar o formulário e gerenciar o cache (st.cache_data.clear()) de forma eficiente após a submissão. | Engenharia de Software, Gerenciamento de Cache, UX em Streamlit.|
 | **Visualização Detalhada:** | Exibe dados brutos em uma tabela interativa (st.dataframe) com filtros de colunas, formatação de moeda (R$) e opções de visualização (Todos, Head, Tail). | Visualização de Dados, st.column_config, Pandas.|
 
-## ✨ Funcionalidades Principais (4_📊_Gráficos)
+## ✨ Funcionalidades Principais (4_📊_tendências)
 
 Recurso | Descrição | Habilidades Demonstradas
 | :--- | :--- | :--- |
