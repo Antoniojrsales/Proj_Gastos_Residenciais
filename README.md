@@ -22,7 +22,7 @@ Proj_Gastos_Residenciais/
 │   ├── 1_🔑_login.py      
 │   ├── 2_🏠_painel.py      
 │   ├── 3_🎲_dados.py      
-│   └── 4_📊_graficos.py    
+│   └── 4_📊_tendencias.py    
 ├── utils/
 │   ├── data_processing.py 
 │   └── db_connector.py    
@@ -58,7 +58,7 @@ Para executar a aplicação em sua máquina local, siga os passos abaixo:
 1. Clonagem e Configuração do Ambiente
 ```
 # Clone o repositório
-git clone [SEU_LINK_DO_REPOSITORIO]
+git clone [https://github.com/Antoniojrsales/Proj_Gastos_Residenciais]
 cd Proj_Gastos_Residenciais
 
 # Crie e ative o ambiente virtual
@@ -114,3 +114,6 @@ Recurso | Descrição | Habilidades Demonstradas
 | **Gráfico de Tendência Histórica:** | Gráfico de linha interativo que traça a evolução mensal da Receita e da Despesa. O eixo temporal é ordenado corretamente usando manipulação de strings Pandas (%Y-%m). | Série Temporal, Visualização de Tendência, Manipulação de Eixo Cronológico.|
 | **Análise de Balanço Mensal:** | Gráfico de barras que exibe o Saldo (Receita - Despesa) para cada mês. As barras são coloridas dinamicamente (Verde para Saldo Positivo, Vermelho para Negativo). | Plotly Avançado, Mapeamento de Cores Dinâmicas, Análise de Fluxo de Caixa.|
 | **Agregação Modular:** | O DataFrame é pré-agregado por mês/tipo de forma eficiente por uma função única (aggregate_monthly_data), garantindo que o Plotly receba dados prontos para visualização. | Engenharia de Dados (Aggregation), Desempenho.|
+| **Modelagem Preditiva (SARIMAX):** | Implementação do modelo estatístico SARIMAX (Seasonal AutoRegressive Integrated Moving Average with eXogenous factors) para projetar receitas e despesas futuras. | Data Science, Modelagem Estatística, Séries Temporais.|
+| **Projeção de Fluxo de Caixa:** | Interface customizável que permite ao usuário definir o horizonte de previsão (ex: 12 meses) para visualizar o Resumo da Projeção (Receita, Despesa e Saldo projetados). | Financial Forecasting, UX Preditiva, Tomada de Decisão.|
+| **Visualização Avançada de Séries:** | Diferenciação visual entre dados históricos (reais) e dados previstos através de estilos de linha (contínua vs. pontilhada), facilitando a interpretação imediata das tendências. | Visualização de Dados Complexos, Plotly Avançado.|
