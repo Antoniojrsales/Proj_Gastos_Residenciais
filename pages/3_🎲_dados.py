@@ -12,6 +12,11 @@ st.set_page_config(
 
 st.sidebar.markdown('Desenvolvido por [AntonioJrSales](https://antoniojrsales.github.io/meu_portfolio/)')
 
+# Função para carregar o CSS externo
+def local_css(file_name):
+    with open(file_name) as f:
+        st.markdown(f"<style>{f.read()}</style>", unsafe_allow_html=True)
+
 st.markdown("""
 <div style="
     padding: 5px;
@@ -34,7 +39,9 @@ if df_dados.empty:
     st.warning("Dados não encontrados na sessão. Por favor, faça login novamente.")
     st.stop()
 
-aba1, aba2 = st.tabs(['Dados Brutos', 'Inserindo Dados na base']) 
+aba1, aba2 = st.tabs(['Dados Brutos', 'Inserindo Dados na base'])
+# Chamando a função
+local_css("style.css")
 
 with aba1:
     with st.sidebar.expander("🔍 Visualizar colunas"):
@@ -91,6 +98,25 @@ with aba2:
         select_descricao = st.text_input('Descrição (Opcional, mas Recomendado):', placeholder='Ex: Almoço no Centro, Pedágio, etc.')
         
         submit_button = st.form_submit_button('Adicionar novos valores')
+        st.markdown("""
+        <style>
+        /* Alvo específico para o botão de submit dentro do form */
+        .stFormSubmitButton > button {
+            background-color: #075eb2 !important;
+            color: white !important;
+            border-radius: 5px;
+            border: none;
+            height: auto;
+            padding: 0.5em 1em;
+        }
+        
+        /* Efeito de hover para não ficar estático */
+        .stFormSubmitButton > button:hover {
+            background-color: #004d9f !important;
+            color: white !important;
+        }
+        </style>
+        """, unsafe_allow_html=True)
 
     # --- Lógica de Submissão ---
     if submit_button:

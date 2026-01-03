@@ -20,7 +20,10 @@ CATEGORY_MAP = {
     'Claro': ('Moradia/Contas', 'Despesa'),
     'Plano': ('Moradia/Contas', 'Despesa'),
     'Faculdade': ('Moradia/Contas', 'Despesa'),
-    'Nubank': ('Moradia/Contas', 'Despesa'),
+    
+    #Financeiro
+    'Nubank': ('Cartao/Credito', 'Despesa'),
+    'Financeiro/Credito/Terc.': ('Cartao/Credito', 'Despesa'),
     
     # Transporte / Veículo
     'Despesa Moto': ('Transporte', 'Despesa'),
