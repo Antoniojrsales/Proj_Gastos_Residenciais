@@ -33,7 +33,7 @@ def check_password(input_password, stored_password):
     return input_hash == stored_password
 
 # ---------------------------------------------------------
-# 🗂️ Carregar Credenciais de Usuário
+# 🗂️ CARREGAR CREDENCIAIS DE USUÁRIO
 # ---------------------------------------------------------
 # Tentativa de carregar os usuários autorizados via Secrets do Streamlit (Segurança)
 try:
