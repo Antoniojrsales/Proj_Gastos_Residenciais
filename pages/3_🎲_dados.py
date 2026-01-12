@@ -1,18 +1,30 @@
+# ---------------------------------------------------------
+# 📚 BIBLIOTECAS E RECURSOS INTERNOS
+# ---------------------------------------------------------
 import streamlit as st
 import pandas as pd
 from datetime import datetime
 from utils.auth_check import check_login
 from utils.db_connector import get_gspread_client, append_row, load_data
 
+# ---------------------------------------------------------
+# ⚙️ CONFIGURAÇÕES INICIAIS DA INTERFACE (STREAMLIT)
+# ---------------------------------------------------------
+# 1. Define o título da aba e o ícone da aplicação
+# 2. Configura o layout como 'wide' para usar toda a largura da tela
+# 3. Adiciona os créditos do desenvolvedor na barra lateral
 st.set_page_config(
     page_title="Visualização dos Dados | Gastos Residencias)",
     page_icon="🎲",
     layout="wide"
 )
-
 st.sidebar.markdown('Desenvolvido por [AntonioJrSales](https://antoniojrsales.github.io/meu_portfolio/)')
 
-# Função para carregar o CSS externo
+# ---------------------------------------------------------
+# 🎨 ESTILIZAÇÃO E CABEÇALHO HTML
+# ---------------------------------------------------------
+# 1. Função para carregar arquivo CSS externo
+# 2. Renderiza o título principal da página usando tags HTML/CSS personalizadas
 def local_css(file_name):
     with open(file_name) as f:
         st.markdown(f"<style>{f.read()}</style>", unsafe_allow_html=True)
@@ -28,9 +40,13 @@ st.markdown("""
 </div>
 """, unsafe_allow_html=True)
 
+# ---------------------------------------------------------
+# 🔐 SEGURANÇA E CONTROLE DE SESSÃO
+# ---------------------------------------------------------
+# 1. Verifica se o usuário está logado
+# 2. Inicializa chaves de controle no session_state para reset de formulários
+# 3. Valida se os dados necessários existem na memória antes de prosseguir
 check_login()
-
-# --- INICIALIZAÇÃO DO ESTADO DE SESSÃO ---
 if 'form_key' not in st.session_state:
     st.session_state.form_key = 0
 
@@ -39,10 +55,20 @@ if df_dados.empty:
     st.warning("Dados não encontrados na sessão. Por favor, faça login novamente.")
     st.stop()
 
+# ---------------------------------------------------------
+# 📑 ESTRUTURA DE NAVEGAÇÃO (TABS)
+# ---------------------------------------------------------
+# 1. Cria as abas de 'Dados Brutos' e 'Inserção'
+# 2. Aplica o arquivo de estilos CSS local
 aba1, aba2 = st.tabs(['Dados Brutos', 'Inserindo Dados na base'])
-# Chamando a função
 local_css("style.css")
 
+# ---------------------------------------------------------
+# 🔍 ABA 1: VISUALIZAÇÃO E FILTRAGEM
+# ---------------------------------------------------------
+# 1. Filtros laterais para selecionar colunas e tipo de visualização (Top/Bottom)
+# 2. Aplica configurações de formatação de moeda (R$) na coluna de valores
+# 3. Exibe o resumo quantitativo (linhas e colunas) do dataset
 with aba1:
     with st.sidebar.expander("🔍 Visualizar colunas"):
         options = st.multiselect('Escolha a Coluna:', df_dados.columns, default=list(df_dados.columns))
@@ -71,22 +97,24 @@ with aba1:
         st.write('Por favor, selecione ao menos uma coluna.')
 
     st.divider()
-    st.markdown(f"O dataset possui :blue[{df_dados.shape[0]}] linhas e :blue[{df_dados.shape[1]}] colunas.")
-
+    st.markdown("Dimensões do DataFrame:")
+    st.markdown(f"Linhas: \t {df_dados.shape[0]}")
+    st.markdown(f"Colunas: \t {df_dados.shape[1]}")
     st.divider()
 
+# ---------------------------------------------------------
+# 📝 ABA 2: FORMULÁRIO DE ENTRADA DE DADOS
+# ---------------------------------------------------------
+# 1. Prepara as categorias e estabelece conexão com Google Sheets
+# 2. Constrói a interface do formulário (Data, Valor, Categoria, Descrição)
+# 3. Aplica CSS customizado para o botão de submissão azul
 with aba2:
-    # Obtemos a lista de categorias únicas e ordenadas a partir do nosso mapa
     tipos_categorias_disponiveis = sorted(df_dados['Categorias'].unique()) 
-
-    # Conexão gspread (se ainda não estiver definida no topo)
     sheet_client, connected = get_gspread_client() 
 
-    # --- Formulário ---
     with st.form("form_novo_gasto"):
         col_data, col_valor = st.columns(2)
         with col_data:
-            # Recomendo usar st.date_input para garantir o tipo data
             select_data = st.date_input('Selecione a Data:', datetime.now().date())
         
         with col_valor:
@@ -94,7 +122,6 @@ with aba2:
 
         select_categoria = st.selectbox('Selecione qual a categoria:', tipos_categorias_disponiveis, index=None, placeholder='Escolha uma categoria...')
         
-        # Adicione uma descrição, é fundamental para análise!
         select_descricao = st.text_input('Descrição (Opcional, mas Recomendado):', placeholder='Ex: Almoço no Centro, Pedágio, etc.')
         
         submit_button = st.form_submit_button('Adicionar novos valores')
@@ -118,7 +145,12 @@ with aba2:
         </style>
         """, unsafe_allow_html=True)
 
-    # --- Lógica de Submissão ---
+    # ---------------------------------------------------------
+    # 💾 LÓGICA DE PROCESSAMENTO E ENVIO
+    # ---------------------------------------------------------
+    # 1. Valida se os campos obrigatórios foram preenchidos
+    # 2. Formata os dados para o padrão da planilha (DD/MM/AAAA)
+    # 3. Envia para o DB e atualiza o estado global para refletir as mudanças
     if submit_button:
         if not connected:
              st.error("❌ Conexão com o Google Sheets falhou. Tente novamente mais tarde.")
@@ -127,19 +159,13 @@ with aba2:
         elif select_valor <= 0.0:
             st.warning("⚠️ O valor deve ser maior que zero.")
         else:
-            # 1. Formatação da Linha
-            # Se o seu Sheets espera [Data, Categorias, Valor], ajuste a lista abaixo.
-            # O formato da data deve ser compatível com o que o Sheets espera:
             data_formatada = select_data.strftime("%d/%m/%Y") 
             
             nova_linha = [data_formatada, select_categoria, select_valor, select_descricao] 
             
-            # 2. Chama a função de escrita (do db_connector.py)
             if append_row(nova_linha, sheet_client):
                 st.success("✅ Novo valor adicionado com sucesso e salvo na planilha!")
-                # 1. Incrementa a chave para forçar a limpeza do formulário
                 st.session_state.form_key += 1
-                # 3. Atualiza o DataFrame e Força o Recarregamento
                 st.session_state['df_Bi_Gastos_Resid'] = load_data(
                     st.secrets["SHEET"]["SHEET_NAME"], sheet_client
                 )
