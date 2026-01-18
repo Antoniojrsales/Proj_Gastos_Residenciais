@@ -1,3 +1,6 @@
+# ---------------------------------------------------------
+# 📚 BIBLIOTECAS E RECURSOS INTERNOS
+# ---------------------------------------------------------
 import streamlit as st
 import plotly.express as px
 import plotly.graph_objects as go
@@ -9,12 +12,17 @@ from statsmodels.tsa.statespace.sarimax import SARIMAX
 from statsmodels.tsa.seasonal import seasonal_decompose
 import matplotlib.pyplot as plt
 
+# ---------------------------------------------------------
+# ⚙️ CONFIGURAÇÕES INICIAIS DA INTERFACE (STREAMLIT)
+# ---------------------------------------------------------
+# 1. Define o título da aba e o ícone da aplicação
+# 2. Configura o layout como 'wide' para usar toda a largura da tela
+# 3. Adiciona os créditos do desenvolvedor na barra lateral
 st.set_page_config(
     page_title="Tendências | Gastos Residencias",
     page_icon="📊",
     layout="wide"
 )
-
 st.sidebar.markdown('Desenvolvido por [AntonioJrSales](https://antoniojrsales.github.io/meu_portfolio/)')
 
 st.markdown("""
@@ -28,17 +36,35 @@ st.markdown("""
 </div>
 """, unsafe_allow_html=True)
 
-check_login()
+# ---------------------------------------------------------
+# 🎨 ESTILIZAÇÃO E CABEÇALHO HTML
+# ---------------------------------------------------------
+# 1. Função para carregar arquivo CSS externo
+# 2. Renderiza o título principal da página usando tags HTML/CSS personalizadas
+def local_css(file_name):
+    with open(file_name) as f:
+        st.markdown(f"<style>{f.read()}</style>", unsafe_allow_html=True)
 
-# Acessa o DataFrame salvo na sessão
+# ---------------------------------------------------------
+# 🔐 SEGURANÇA E CONTROLE DE SESSÃO
+# ---------------------------------------------------------
+# 1. Verifica se o usuário está logado
+# 2. Inicializa chaves de controle no session_state para reset de formulários
+# 3. Valida se os dados necessários existem na memória antes de prosseguir
+check_login()
 if 'df_Bi_Gastos_Resid' in st.session_state:
     df_dados = st.session_state['df_Bi_Gastos_Resid']
 else:
     st.warning("Dados não encontrados na sessão. Por favor, faça login novamente.")
 
+# ---------------------------------------------------------
+# 📑 ESTRUTURA DE NAVEGAÇÃO (TABS)
+# ---------------------------------------------------------
+# 1. Cria as abas de 'Dados Brutos' e 'Inserção'
+# 2. Aplica o arquivo de estilos CSS local
 aba1, aba2 = st.tabs(['Visualização', 'Predição']) 
+local_css("style.css")
 
-# Chama a função modularizada para obter os dados agregados
 df_tendencia = aggregate_monthly_data(df_dados)
 
 with aba1:
@@ -58,9 +84,6 @@ with aba1:
     """, unsafe_allow_html=True)
 
     fig = go.Figure()
-
-    # --- 1. GRÁFICO DE LINHAS (EVOLUCAO MENSAL) ---
-    # Linha da Receita
     fig.add_trace(go.Scatter(
         x=df_tendencia['Mes/Ano'], 
         y=df_tendencia['Receita'],
@@ -69,7 +92,6 @@ with aba1:
         line=dict(color='#2ECC71', width=3) # Verde
     ))
 
-    # Linha da Despesa
     fig.add_trace(go.Scatter(
         x=df_tendencia['Mes/Ano'], 
         y=df_tendencia['Despesa'],
@@ -88,17 +110,7 @@ with aba1:
 
     st.plotly_chart(fig, use_container_width=True)
 
-    # --- 2. GRÁFICO DE BARRAS (SALDO MENSAL) ---
-    st.markdown("""
-        <div style="
-            text-align: center;">
-            <h3 style=" font-size: 1.5em; 
-                        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;">
-                Saldo Líquido Mensal
-            </h3>
-            
-        </div>
-    """, unsafe_allow_html=True)
+    st.divider()
 
     fig_bar = px.bar(
         df_tendencia, 
@@ -106,11 +118,36 @@ with aba1:
         y='Saldo',
         color='Saldo',
         color_continuous_scale=[(0, 'red'), (0.5, 'yellow'), (1, 'green')],
-        title="Saldo por Mês"
+        title="Saldo Líquido Mensal",
+        text_auto=True
+    )
+
+    fig_bar.update_layout(
+        plot_bgcolor='rgba(0,0,0,0)',
+        #paper_bgcolor='lightgray',
+        title_x=0.5, 
+        title_font_size=24, 
+        showlegend=False,
+        xaxis=dict(
+            tickfont=dict(
+                family="Arial",
+                size=12,
+                color="#000000"
+            ),
+            title_font=dict(size=18)
+        ),
+        yaxis=dict(
+            tickfont=dict(
+                family="Arial",
+                size=12,
+                color="#000000"
+            ),
+            title_font=dict(size=18)
+        )
     )
 
     fig_bar.update_traces(marker_color=['red' if s < 0 else 'green' for s in df_tendencia['Saldo']])
-
+    
     st.plotly_chart(fig_bar, use_container_width=True)
 
 with aba2:
@@ -190,29 +227,42 @@ with aba2:
             m1.metric("Receita Total", f"R$ {total_rec:,.2f}")
             m2.metric("Despesa Total", f"R$ {total_desp:,.2f}", delta_color="inverse")
             m3.metric("Saldo Projetado", f"R$ {saldo_proj:,.2f}")
-
-            # --- LÓGICA DO GRÁFICO (Baseado na seleção do Selectbox) ---
-            fig, ax = plt.subplots(figsize=(12, 6))
-            
+ 
+            fig = go.Figure()
             if opcao_analise == "Apenas Receitas":
-                ax.plot(df_ts.index, df_ts['Receita'], label='Histórico', color='#2ecc71')
-                ax.plot(pred_mean_rec.index, pred_mean_rec, '--', color='#2ecc71', label='Previsão')
-            
-            elif opcao_analise == "Apenas Despesas":
-                ax.plot(df_ts.index, df_ts['Despesa'], label='Histórico', color='#e74c3c')
-                ax.plot(pred_mean_desp.index, pred_mean_desp, '--', color='#e74c3c', label='Previsão')
-                
-            elif opcao_analise == "Comparativo Geral":
-                # Plota ambos
-                ax.plot(df_ts.index, df_ts['Receita'], color='#2ecc71', label='Rec. Real')
-                ax.plot(pred_mean_rec.index, pred_mean_rec, '--', color='#2ecc71', label='Rec. Prevista')
-                ax.plot(df_ts.index, df_ts['Despesa'], color='#e74c3c', label='Desp. Real')
-                ax.plot(pred_mean_desp.index, pred_mean_desp, '--', color='#e74c3c', label='Desp. Prevista')
+                fig.add_trace(go.Scatter(x=df_ts.index, y=df_ts['Receita'], mode='lines+markers', name='Histórico', line=dict(color='#2ECC71', width=3)))
+                fig.add_trace(go.Scatter(x=pred_mean_rec.index, y=pred_mean_rec, mode='lines', name='Previsão', line=dict(color='#2ECC71', width=3, dash='dash')))
+                titulo = "Análise de Receita: Histórico vs Previsão"
 
-            ax.legend()
-            ax.grid(True, alpha=0.2)
-            st.pyplot(fig)
+            elif opcao_analise == "Apenas Despesas":
+                fig.add_trace(go.Scatter(x=df_ts.index, y=df_ts['Despesa'], mode='lines+markers', name='Histórico', line=dict(color='#e74c3c', width=3)))
+                fig.add_trace(go.Scatter(x=pred_mean_desp.index, y=pred_mean_desp, mode='lines', name='Previsão', line=dict(color='#e74c3c', width=3, dash='dash')))
+                titulo = "Análise de Despesa: Histórico vs Previsão"
+
+            elif opcao_analise == "Comparativo Geral":
+                # Receitas
+                fig.add_trace(go.Scatter(x=df_ts.index, y=df_ts['Receita'], mode='lines+markers', name='Hist. Receita', line=dict(color='#2ECC71', width=2)))
+                fig.add_trace(go.Scatter(x=pred_mean_rec.index, y=pred_mean_rec, mode='lines', name='Prev. Receita', line=dict(color='#2ECC71', width=2, dash='dash')))
+                # Despesas
+                fig.add_trace(go.Scatter(x=df_ts.index, y=df_ts['Despesa'], mode='lines+markers', name='Hist. Despesa', line=dict(color='#e74c3c', width=2)))
+                fig.add_trace(go.Scatter(x=pred_mean_desp.index, y=pred_mean_desp, mode='lines', name='Prev. Despesa', line=dict(color='#e74c3c', width=2, dash='dash')))
+                titulo = "Comparativo Geral: Receitas vs Despesas"
+
+            # Configuração Única de Layout
+            fig.update_layout(
+                title=titulo,
+                xaxis_title="Data",
+                yaxis_title="Valor (R$)",
+                hovermode="x unified",
+                legend=dict(orientation="h", yanchor="bottom", y=1.02, xanchor="right", x=1),
+                margin=dict(l=20, r=20, t=60, b=20), # Ajusta margens para ganhar espaço
+                plot_bgcolor='rgba(0,0,0,0)', # Fundo transparente (opcional)
+            )
+
+            # Grade horizontal suave (estilo gráfico moderno)
+            fig.update_yaxes(showgrid=True, gridwidth=1, gridcolor='rgba(211, 211, 211, 0.3)')
+
+            st.plotly_chart(fig, use_container_width=True)
 
         except Exception as e:
             st.error(f"Erro ao calcular: {e}")
-            
