@@ -48,9 +48,9 @@ def local_css(file_name):
 # ---------------------------------------------------------
 # 🔐 SEGURANÇA E CONTROLE DE SESSÃO
 # ---------------------------------------------------------
-# 1. Verifica se o usuário está logado
-# 2. Inicializa chaves de controle no session_state para reset de formulários
-# 3. Valida se os dados necessários existem na memória antes de prosseguir
+# 1. Verifica se o usuário possui sessão ativa (login)
+# 2. Recupera o DataFrame principal do estado da sessão
+# 3. Alerta caso os dados não estejam carregados
 check_login()
 if 'df_Bi_Gastos_Resid' in st.session_state:
     df_dados = st.session_state['df_Bi_Gastos_Resid']
@@ -58,38 +58,33 @@ else:
     st.warning("Dados não encontrados na sessão. Por favor, faça login novamente.")
 
 # ---------------------------------------------------------
-# 📑 ESTRUTURA DE NAVEGAÇÃO (TABS)
+# 📑 ESTRUTURA DE NAVEGAÇÃO E PROCESSAMENTO
 # ---------------------------------------------------------
-# 1. Cria as abas de 'Dados Brutos' e 'Inserção'
-# 2. Aplica o arquivo de estilos CSS local
+# 1. Define as abas de 'Visualização' e 'Predição'
+# 2. Realiza a agregação mensal dos dados para as análises
 aba1, aba2 = st.tabs(['Visualização', 'Predição']) 
 local_css("style.css")
 
 df_tendencia = aggregate_monthly_data(df_dados)
 
+# ---------------------------------------------------------
+# 📊 ABA 1: VISUALIZAÇÃO HISTÓRICA
+# ---------------------------------------------------------
 with aba1:
     if df_tendencia.empty:
         st.warning("Dados insuficientes ou falha na agregação para análise de tendência.")
         st.stop()
 
-    st.markdown("""
-        <div style="
-            text-align: center;">
-            <h3 style=" font-size: 1.5em; 
-                        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;">
-                Evolução Mensal da Receita e Despesa
-            </h3>
-            
-        </div>
-    """, unsafe_allow_html=True)
-
+    # Gráfico de Linhas (Receita vs Despesa)
     fig = go.Figure()
     fig.add_trace(go.Scatter(
         x=df_tendencia['Mes/Ano'], 
         y=df_tendencia['Receita'],
         mode='lines+markers',
         name='Receita',
-        line=dict(color='#2ECC71', width=3) # Verde
+        line=dict(color='#2ECC71', width=3), # Verde
+        fill='tonexty', # Preenche a área entre as linhas
+        fillcolor='rgba(46, 204, 113, 0.1)' # Verde bem clarinho
     ))
 
     fig.add_trace(go.Scatter(
@@ -100,49 +95,67 @@ with aba1:
         line=dict(color='#E74C3C', width=3) # Vermelho
     ))
 
+    fig.update_traces(hovertemplate="Valor: R$ %{y:,.2f}")
+
     fig.update_layout(
-        xaxis_title='Mês/Ano',
-        yaxis_title='Valor (R$)',
+        title='Evolução Mensal da Receita vs Despesa',
+        title_x=0.36, 
+        title_font_size=24, 
+        showlegend=False,
         hovermode="x unified",
         legend=dict(yanchor="top", y=0.99, xanchor="left", x=0.01),
-        margin=dict(l=20, r=20, t=30, b=20)
+        margin=dict(l=20, r=20, t=30, b=20),
+        xaxis=dict(
+            title="",
+            linecolor='lightgray',
+            showgrid=False,
+            ),
+        yaxis=dict(
+            title="Valor (R$)",
+            showgrid=True,
+            gridcolor='whitesmoke'
+        )
     )
 
     st.plotly_chart(fig, use_container_width=True)
 
     st.divider()
 
+    # Gráfico de Barras (Saldo Líquido)
+    # Define cores condicionais (Verde para Positivo, Vermelho para Negativo)
+    colors = ['#EF553B' if s < 0 else '#00CC96' for s in df_tendencia['Saldo']]
     fig_bar = px.bar(
         df_tendencia, 
         x='Mes/Ano', 
         y='Saldo',
-        color='Saldo',
-        color_continuous_scale=[(0, 'red'), (0.5, 'yellow'), (1, 'green')],
-        title="Saldo Líquido Mensal",
-        text_auto=True
+        title="<b>Saldo Líquido Mensal da Receita vs Despesa</b>",
+        text_auto='.2f'
     )
 
+    fig_bar.update_traces(
+        marker_color=colors,
+        textposition='outside', # Mantém os números fora das barras
+        cliponaxis=False        # Impede que o texto seja cortado no topo
+    )
+    
     fig_bar.update_layout(
         plot_bgcolor='rgba(0,0,0,0)',
-        #paper_bgcolor='lightgray',
-        title_x=0.5, 
+        title_x=0.36, 
         title_font_size=24, 
         showlegend=False,
+        margin=dict(t=80, b=40, l=50, r=50),
         xaxis=dict(
-            tickfont=dict(
-                family="Arial",
-                size=12,
-                color="#000000"
+            title="",
+            linecolor='lightgray',
+            showgrid=False,
             ),
-            title_font=dict(size=18)
-        ),
         yaxis=dict(
-            tickfont=dict(
-                family="Arial",
-                size=12,
-                color="#000000"
-            ),
-            title_font=dict(size=18)
+            title="Saldo (R$)",
+            zeroline=True,
+            zerolinewidth=2,
+            zerolinecolor='black', # Destaca a linha do zero
+            showgrid=True,
+            gridcolor='whitesmoke'
         )
     )
 
@@ -251,12 +264,22 @@ with aba2:
             # Configuração Única de Layout
             fig.update_layout(
                 title=titulo,
-                xaxis_title="Data",
-                yaxis_title="Valor (R$)",
+                title_x=0.36, 
+                title_font_size=24, 
                 hovermode="x unified",
                 legend=dict(orientation="h", yanchor="bottom", y=1.02, xanchor="right", x=1),
                 margin=dict(l=20, r=20, t=60, b=20), # Ajusta margens para ganhar espaço
                 plot_bgcolor='rgba(0,0,0,0)', # Fundo transparente (opcional)
+                xaxis=dict(
+                    title="",
+                    linecolor='lightgray',
+                    showgrid=False
+                ),
+                yaxis=dict(
+                    title="Valor (R$)",
+                    showgrid=True,
+                    gridcolor='whitesmoke'
+                )
             )
 
             # Grade horizontal suave (estilo gráfico moderno)
@@ -266,3 +289,4 @@ with aba2:
 
         except Exception as e:
             st.error(f"Erro ao calcular: {e}")
+            
